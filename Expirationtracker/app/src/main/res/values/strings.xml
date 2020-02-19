@@ -7,9 +7,22 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="e_mail">Email</string>
-    <string name="tag">Let\'s join us and \nBuild your relationship with others</string>
+    <string name="tag">Let\'s join us </string>
     <string name="swipe_right_for_login">Swipe Right for Login</string>
     <string name="register">Register</string>
     <string name="re_type_password">Re-type Password</string>
     <string name="your_name">Full Name</string>
+
+    <!--    for log-->
+    <string name="main_act">Main Activity</string>
+    <string name="login_frg">Login Fragment</string>
+    <string name="register_frg">Register Fragment</string>
+    <string name="on_create">OnCreate() is triggered</string>
+    <string name="on_start">OnStart() is triggered</string>
+    <string name="on_resume">OnResume() is triggered</string>
+    <string name="on_pause">OnPause() is triggered</string>
+    <string name="on_stop">OnStop() is triggered</string>
+    <string name="on_create_view">OnCreateView() is triggered</string>
+
+
 </resources>
