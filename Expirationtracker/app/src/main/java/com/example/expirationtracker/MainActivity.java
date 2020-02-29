@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.example.expirationtracker.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        User user = new User("a","111","ab");
+        mDatabase.child("users").push().setValue(user);
 
         ViewPager viewPager = findViewById(R.id.viewPager);
         AuthenticationPagerAdapter pagerAdapter = new AuthenticationPagerAdapter(getSupportFragmentManager());

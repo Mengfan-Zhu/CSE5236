@@ -5,13 +5,15 @@ import java.util.Set;
 
 public class Category {
     private String mName;
-    private String mUserName;
-    private Set<Item> mItemSet;
+    private String mBegin;
+    private String mFrequency;
+    private String mTime;
 
-    public Category(String name, String userName) {
+    public Category(String name, String begin, String frequency, String time) {
         mName = name;
-        mUserName = userName;
-        mItemSet = new HashSet<>();
+        mBegin = begin;
+        mFrequency = frequency;
+        mTime = time;
     }
 
     public String getName() {
@@ -22,19 +24,5 @@ public class Category {
         mName = name;
     }
 
-    public String getUserName() {
-        return mUserName;
-    }
 
-    public void setUserName(String userName) {
-        mUserName = userName;
-    }
-
-    public Set<Item> getItemSet() {
-        return mItemSet;
-    }
-
-    public void setItemSet(Set<Item> itemSet) {
-        mItemSet = itemSet;
-    }
 }

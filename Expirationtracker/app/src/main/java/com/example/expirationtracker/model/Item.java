@@ -3,8 +3,7 @@ package com.example.expirationtracker.model;
 import java.util.Date;
 
 public class Item {
-    private String mUserName;
-    private String mCategory;
+
     private String mName;
     private int mId;
     private Date mExpirationDate;
@@ -12,31 +11,16 @@ public class Item {
     private String mDescription;
     private int mDaysToExpiry;
 
-    public Item(String userName, String category, String name, int id, Date expirationDate, int quantity, String description, int daysToExpiry) {
-        mUserName = userName;
-        mCategory = category;
+    public Item(String name, int id, Date expirationDate, int quantity, String description, int daysToExpiry) {
+
         mName = name;
         mId = id;
         mExpirationDate = expirationDate;
         mQuantity = quantity;
+        mDescription = description;
         mDaysToExpiry = daysToExpiry;
     }
 
-    public String getUserName() {
-        return mUserName;
-    }
-
-    public void setUserName(String userName) {
-        mUserName = userName;
-    }
-
-    public String getCategory() {
-        return mCategory;
-    }
-
-    public void setCategory(String category) {
-        mCategory = category;
-    }
 
     public String getName() {
         return mName;
