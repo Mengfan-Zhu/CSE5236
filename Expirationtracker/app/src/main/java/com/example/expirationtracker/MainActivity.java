@@ -6,21 +6,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-
 import android.os.Bundle;
 import android.util.Log;
 
 import java.util.ArrayList;
 
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.example.expirationtracker.model.User;
-
 public class MainActivity extends AppCompatActivity {
-//
-//    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
-//        User user = new User("a","111","ab");
         ViewPager viewPager = findViewById(R.id.viewPager);
         AuthenticationPagerAdapter pagerAdapter = new AuthenticationPagerAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(new LoginFragment());
@@ -40,25 +30,21 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart() {
         Log.i(getString(R.string.main_act), getString(R.string.on_start));
-
         super.onStart();
     }
 
     public void onResume() {
         Log.i(getString(R.string.main_act), getString(R.string.on_resume));
-
         super.onResume();
     }
 
     public void onPause() {
         Log.i(getString(R.string.main_act), getString(R.string.on_pause));
-
         super.onPause();
     }
 
     public void onStop() {
         Log.i(getString(R.string.main_act), getString(R.string.on_stop));
-
         super.onStop();
     }
 

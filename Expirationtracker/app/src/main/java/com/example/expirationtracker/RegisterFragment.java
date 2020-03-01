@@ -31,6 +31,10 @@ import android.widget.Toast;
 
 import com.example.expirationtracker.model.User;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.example.expirationtracker.model.User;
 
 
 /**
@@ -43,6 +47,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
     private EditText mEtUsername;
     private EditText mEtPassword;
     private EditText mEtConfirm;
+    private DatabaseReference mDatabase;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -103,12 +108,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
 
     public void onStart() {
-        // TODO: check input
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        // TODO: update UI
-
+        if(currentUser != null) {
+            // TODO: update UI
+        }
     }
 
     private void createAccount() {
@@ -119,13 +124,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         String confirm = mEtConfirm.getText().toString();
         if (activity != null) {
             if (password.equals(confirm) && !username.equals("") && !password.equals("")) {
-
-                User account = new User(username, password, username);
-                /////////////////////////////////ADD to Firebase
                 Log.wtf(TAG, "createAccount:" + username);
-                // Check valid input
-
-                // Create account
+                final User newUser = new User(username, username);
                 mAuth.createUserWithEmailAndPassword(username, password)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             FragmentActivity activity = getActivity();
@@ -137,6 +137,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Toast.makeText(activity.getApplicationContext(), "Register success",
                                             Toast.LENGTH_SHORT).show();
+                                    mDatabase = FirebaseDatabase.getInstance().getReference();
+                                    mDatabase.child("users").child(mAuth.getUid()).setValue(newUser);
                                     // TODO: update UI
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -147,8 +149,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                                 }
                             }
                         });
-
-//                Toast.makeText(activity.getApplicationContext(), "Sign up successfully.", Toast.LENGTH_SHORT).show();
             } else if ((username.equals("")) || (password.equals("")) || (confirm.equals(""))) {
                 Toast.makeText(activity.getApplicationContext(), "Username or Password cannot be empty", Toast.LENGTH_SHORT).show();
             } else if (!password.equals(confirm)){

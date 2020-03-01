@@ -31,23 +31,20 @@ import androidx.fragment.app.FragmentActivity;
 public class LoginFragment extends Fragment implements View.OnClickListener {
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
-
     private FirebaseAuth mAuth;
-    private static String TAG = "Login";
+    private static String TAG = "LoginFragment";
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(getString(R.string.login_frg), getString(R.string.on_create_view));
+        Log.i(TAG, getString(R.string.on_create_view));
         View v;
         Activity activity = getActivity();
         mAuth = FirebaseAuth.getInstance();
-
         if (activity != null) {
             int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
             if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
@@ -72,11 +69,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onStart() {
-        // TODO: check input
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        // TODO: update UI
+        if(currentUser != null) {
+            // TODO: update UI
+        }
 
     }
 
@@ -100,7 +98,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         Log.d(TAG, "signIn:" + username);
-        // TODO: check input
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
