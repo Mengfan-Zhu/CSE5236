@@ -3,6 +3,7 @@ package com.example.expirationtracker;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -111,9 +112,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null) {
-            // TODO: update UI
-        }
+//        if(currentUser != null) {
+//            Intent intent = new Intent(getActivity(),TestActivity.class);
+//            startActivity(intent);
+//        }
     }
 
     private void createAccount() {

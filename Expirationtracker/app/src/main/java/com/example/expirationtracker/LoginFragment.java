@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
-
+import android.content.Intent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -73,7 +73,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
-            // TODO: update UI
+            Intent intent = new Intent(getActivity(),TestActivity.class);
+            startActivity(intent);
         }
 
     }
@@ -111,6 +112,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             Toast.makeText(activity.getApplicationContext(), "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
                             // TODO: update UI
+                            Intent intent = new Intent(getActivity(),TestActivity.class);
+                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
