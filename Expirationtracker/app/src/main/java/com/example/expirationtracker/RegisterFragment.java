@@ -147,6 +147,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                     Toast.makeText(activity.getApplicationContext(), "Register fail",
                                             Toast.LENGTH_SHORT).show();
+                                     mEtPassword.setText("");
+                                     mEtConfirm.setText("");
                                     // TODO: update UI
                                 }
                             }
