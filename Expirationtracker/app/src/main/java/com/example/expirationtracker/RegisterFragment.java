@@ -148,7 +148,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                             }
                         });
 
-                Toast.makeText(activity.getApplicationContext(), "Sign up successfully.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(activity.getApplicationContext(), "Sign up successfully.", Toast.LENGTH_SHORT).show();
             } else if ((username.equals("")) || (password.equals("")) || (confirm.equals(""))) {
                 Toast.makeText(activity.getApplicationContext(), "Username or Password cannot be empty", Toast.LENGTH_SHORT).show();
             } else if (!password.equals(confirm)){

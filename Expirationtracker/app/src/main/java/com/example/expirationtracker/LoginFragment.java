@@ -46,6 +46,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         Log.i(getString(R.string.login_frg), getString(R.string.on_create_view));
         View v;
         Activity activity = getActivity();
+        mAuth = FirebaseAuth.getInstance();
 
         if (activity != null) {
             int rotation = getActivity().getWindowManager().getDefaultDisplay().getRotation();
@@ -70,17 +71,39 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
     }
 
+    public void onStart() {
+        // TODO: check input
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        // TODO: update UI
+
+    }
+
     @Override
     public void onClick(View view) {
-        
+        switch (view.getId()) {
+            case R.id.btn_login:
+                loginIn();
+                break;
+            /*
+            case R.id.exit_button:
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    activity.getSupportFragmentManager().popBackStack();
+                }
+
+             */
+        }
     }
-    private void loginIn(String email, String password) {
-        Log.d(TAG, "signIn:" + email);
+    private void loginIn() {
+        String username = mUsernameEditText.getText().toString();
+        String password = mPasswordEditText.getText().toString();
+        Log.d(TAG, "signIn:" + username);
         // TODO: check input
         // [START sign_in_with_email]
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
                     FragmentActivity activity = getActivity();
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -88,6 +111,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(activity.getApplicationContext(), "Authentication success.",
+                                    Toast.LENGTH_SHORT).show();
                             // TODO: update UI
                         } else {
                             // If sign in fails, display a message to the user.
