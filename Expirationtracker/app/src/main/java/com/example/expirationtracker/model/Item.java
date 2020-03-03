@@ -5,16 +5,20 @@ import java.util.Date;
 public class Item {
 
     private String mName;
-    private int mId;
-    private Date mExpirationDate;
+    private String mExpirationDate;
     private int mQuantity;
     private String mDescription;
     private int mDaysToExpiry;
 
-    public Item(String name, int id, Date expirationDate, int quantity, String description, int daysToExpiry) {
-
+    public Item(){
+        mName = "";
+        mExpirationDate = "";
+        mQuantity = 0;
+        mDescription = "";
+        mDaysToExpiry = 0;
+    }
+    public Item(String name, String expirationDate, int quantity, int daysToExpiry, String description) {
         mName = name;
-        mId = id;
         mExpirationDate = expirationDate;
         mQuantity = quantity;
         mDescription = description;
@@ -30,19 +34,12 @@ public class Item {
         mName = name;
     }
 
-    public int getId() {
-        return mId;
-    }
 
-    public void setId(int id) {
-        mId = id;
-    }
-
-    public Date getExpirationDate() {
+    public String getExpirationDate() {
         return mExpirationDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(String expirationDate) {
         mExpirationDate = expirationDate;
     }
 
