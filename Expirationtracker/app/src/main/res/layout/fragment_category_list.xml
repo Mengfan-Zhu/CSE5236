@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -34,6 +35,8 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/category_layout"
+
         android:layout_width="match_parent"
         android:layout_height="668dp"
         android:layout_marginBottom="1dp"
@@ -41,43 +44,45 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <RelativeLayout
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item">
+<!--        <RelativeLayout-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginRight="20dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:contextClickable="true"-->
+<!--            android:background="@drawable/bg_item">-->
 
-            <LinearLayout
-                android:layout_marginRight="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+<!--            <LinearLayout-->
+<!--                android:id="@+id/category_layout"-->
+<!--                android:layout_marginRight="40dp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="category 1" />
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="5dp"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:text="category 1" />-->
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:text="Reminder ............" />
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    android:id="@+id/category_list"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginLeft="5dp"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:text="" />-->
+<!--            </LinearLayout>-->
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_arrow_right" />
+<!--            <ImageView-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:src="@drawable/ic_arrow_right" />-->
 
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
     </ScrollView>
 

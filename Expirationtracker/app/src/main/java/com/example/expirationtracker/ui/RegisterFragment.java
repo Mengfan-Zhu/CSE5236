@@ -1,4 +1,4 @@
-package com.example.expirationtracker;
+package com.example.expirationtracker.ui;
 
 
 import android.app.Activity;
@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.expirationtracker.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

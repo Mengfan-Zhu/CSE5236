@@ -1,4 +1,4 @@
-package com.example.expirationtracker;
+package com.example.expirationtracker.ui;
 
 
 import android.app.Activity;
@@ -15,6 +15,8 @@ import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
 import android.content.Intent;
+
+import com.example.expirationtracker.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -71,9 +73,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
-            Intent intent = new Intent(getActivity(),TestActivity.class);
+            Intent intent = new Intent(getActivity(), CategoryListActivity.class);
             startActivity(intent);
         }
 
@@ -112,7 +115,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             Toast.makeText(activity.getApplicationContext(), "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
                             // TODO: update UI
-                            Intent intent = new Intent(getActivity(),TestActivity.class);
+                            Intent intent = new Intent(getActivity(),CategoryListActivity.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.

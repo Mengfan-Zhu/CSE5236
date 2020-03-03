@@ -1,4 +1,4 @@
-package com.example.expirationtracker;
+package com.example.expirationtracker.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -9,10 +9,14 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.expirationtracker.R;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
