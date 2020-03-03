@@ -38,7 +38,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
     private View mView;
-
+    private LinearLayout mCategoryLayout;
+    private Activity mActivity;
 //    // TODO: Rename and change types of parameters
 //    private String mParam1;
 //    private String mParam2;
@@ -65,23 +66,24 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         //}
 
         mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
+        mActivity = getActivity();
         Query categoryQuery = mCategoryReference.orderByChild("name");
-
+        ScrollView categoryList = (ScrollView) mView.findViewById(R.id.category_layout);
+        mCategoryLayout = new LinearLayout(mActivity);
+        mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
+        categoryList.addView(mCategoryLayout);
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Activity activity = getActivity();
+
                 // add wrap layout
-                ScrollView categoryList = (ScrollView) mView.findViewById(R.id.category_layout);
-                LinearLayout categoryLayout = new LinearLayout(activity);
-                categoryLayout.setOrientation(LinearLayout.VERTICAL);
-                categoryList.addView(categoryLayout);
+
                 // add each layout
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String categoryId = currentSnapshot.getKey();
                     Category category = currentSnapshot.getValue(Category.class);
                     // linearLayout for one category content
-                    LinearLayout categoryContent = new LinearLayout(activity);
+                    LinearLayout categoryContent = new LinearLayout(mActivity);
                     categoryContent.setOrientation(LinearLayout.VERTICAL);
                     categoryContent.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     categoryContent.setDividerPadding(10);
@@ -96,22 +98,22 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                         }
                     });
                     // TextView for name
-                    TextView name = new TextView(activity);
+                    TextView name = new TextView(mActivity);
                     name.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                     name.setText(category.getName());
                     name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                     categoryContent.addView(name);
                     // TextView for contents
-                    TextView contents = new TextView(activity);
+                    TextView contents = new TextView(mActivity);
                     contents.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                     contents.setText("Begin: " + category.getBegin() + "\nFrequency: " + category.getFrequency() + "\nTime: " + category.getTime());
                     categoryContent.addView(contents);
                     // linearLayout for buttons
-                    LinearLayout buttonsLayout = new LinearLayout(activity);
+                    LinearLayout buttonsLayout = new LinearLayout(mActivity);
                     buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
                     buttonsLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     // edit button
-                    Button editButton = new Button(activity);
+                    Button editButton = new Button(mActivity);
                     editButton.setText("Edit");
                     editButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     editButton.setOnClickListener(new View.OnClickListener() {
@@ -122,18 +124,19 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                     });
                     buttonsLayout.addView(editButton);
                     // delete button
-                    Button deleteButton = new Button(activity);
+                    Button deleteButton = new Button(mActivity);
                     deleteButton.setText("Delete");
                     deleteButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mCategoryReference.child(categoryId).removeValue();
+
                         }
                     });
                     buttonsLayout.addView(deleteButton);
                     categoryContent.addView(buttonsLayout);
-                    categoryLayout.addView(categoryContent);
+                    mCategoryLayout.addView(categoryContent);
                 }
                 // ...
             }

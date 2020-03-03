@@ -37,6 +37,8 @@ public class ItemListFragment extends Fragment {
     private DatabaseReference mItemReference;
     private View mView;
     private String mCategoryId;
+    private LinearLayout mItemLayout;
+    private Activity mActivity;
     public ItemListFragment() {
         // Required empty public constructor
     }
@@ -53,26 +55,26 @@ public class ItemListFragment extends Fragment {
             mCategoryId = intent.getStringExtra("categoryId");
         }
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-//        Item newCategory1 = new Item("meat","20200101",1,1,"meat");
-//        Item newCategory2 = new Item("bread","20200102",1,1,"bread");
-//        mItemReference.push().setValue(newCategory1);
-//        mItemReference.push().setValue(newCategory2);
+        Item newCategory1 = new Item("meat","20200101",1,1,"meat");
+        Item newCategory2 = new Item("bread","20200102",1,1,"bread");
+        mItemReference.push().setValue(newCategory1);
+        mItemReference.push().setValue(newCategory2);
         Query itemQuery = mItemReference.orderByChild("name");
-        ValueEventListener postListener = new ValueEventListener() {
+        ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
+        mItemLayout = new LinearLayout(getActivity());
+        mItemLayout.setOrientation(LinearLayout.VERTICAL);
+        itemList.addView(mItemLayout);
+        ValueEventListener itemListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Activity activity = getActivity();
                 // add wrap layout
-                ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
-                LinearLayout itemLayout = new LinearLayout(activity);
-                itemLayout.setOrientation(LinearLayout.VERTICAL);
-                itemList.addView(itemLayout);
+                mActivity = getActivity();
                 // add each layout
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String itemId = currentSnapshot.getKey();
                     Item item = currentSnapshot.getValue(Item.class);
                     // linearLayout for one item content
-                    LinearLayout itemContent = new LinearLayout(activity);
+                    LinearLayout itemContent = new LinearLayout(mActivity);
                     itemContent.setOrientation(LinearLayout.VERTICAL);
                     itemContent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     itemContent.setDividerPadding(10);
@@ -85,13 +87,13 @@ public class ItemListFragment extends Fragment {
                         }
                     });
                     // TextView for name
-                    TextView name = new TextView(activity);
+                    TextView name = new TextView(mActivity);
                     name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     name.setText(item.getName());
                     name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                     itemContent.addView(name);
                     // TextView for contents
-                    TextView contents = new TextView(activity);
+                    TextView contents = new TextView(mActivity);
                     contents.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     contents.setText("Expiration Date: " + item.getExpirationDate()
                             + "\nDays To Expiry: " + item.getDaysToExpiry()
@@ -99,11 +101,11 @@ public class ItemListFragment extends Fragment {
                             + "\nDescription: " + item.getDescription());
                     itemContent.addView(contents);
                     // linearLayout for buttons
-                    LinearLayout buttonsLayout = new LinearLayout(activity);
+                    LinearLayout buttonsLayout = new LinearLayout(mActivity);
                     buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
                     buttonsLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     // edit button
-                    Button editButton = new Button(activity);
+                    Button editButton = new Button(mActivity);
                     editButton.setText("Edit");
                     editButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     editButton.setOnClickListener(new View.OnClickListener() {
@@ -114,18 +116,25 @@ public class ItemListFragment extends Fragment {
                     });
                     buttonsLayout.addView(editButton);
                     // delete button
-                    Button deleteButton = new Button(activity);
+                    Button deleteButton = new Button(mActivity);
                     deleteButton.setText("Delete");
                     deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mItemReference.child(itemId).removeValue();
+                            mItemLayout.removeAllViews();
+//                            mView.postInvalidate();
+//                            v.postInvalidate();
+//                            mActivity.finish();
+//                            Intent intent = new Intent(mActivity, ItemListActivity.class);
+//                            intent.putExtra("categoryId",mCategoryId);
+//                            startActivity(intent);
                         }
                     });
                     buttonsLayout.addView(deleteButton);
                     itemContent.addView(buttonsLayout);
-                    itemLayout.addView(itemContent);
+                    mItemLayout.addView(itemContent);
                 }
                 // ...
             }
@@ -136,7 +145,7 @@ public class ItemListFragment extends Fragment {
                 // ...
             }
         };
-        itemQuery.addValueEventListener(postListener);
+        itemQuery.addValueEventListener(itemListener);
 
         return mView;
     }
