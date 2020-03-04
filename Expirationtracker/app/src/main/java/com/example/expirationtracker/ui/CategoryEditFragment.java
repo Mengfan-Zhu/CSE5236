@@ -31,7 +31,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Time;
 import java.util.ArrayList;
 
 /**
@@ -87,7 +86,7 @@ public class CategoryEditFragment extends Fragment{
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_category_edit, container, false);
         mAuth = FirebaseAuth.getInstance();
-
+        mActivity = getActivity();
         Intent intent = getActivity().getIntent();
 
         if(intent.getStringExtra("operation") != null){
@@ -133,26 +132,9 @@ public class CategoryEditFragment extends Fragment{
                         ((RadioButton)mView.findViewById(R.id.btn_5)).setChecked(true);
                         break;
                 }
-                mCategoryReference = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid()).addValueEventListener(new ValueEventListener(){
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot){
-                        Category c = dataSnapshot.getValue(Category.class);
-
-
-
-
-                        String[] s = c.getTime().split(":");
-                        //Not sure if it is correct.....
-                        ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentHour(Integer.parseInt(s[0]));
-                        ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentMinute(Integer.parseInt(s[1]));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-
-                });
+                String[] s = intent.getStringExtra("categoryTime").split(":");
+                ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentHour(Integer.parseInt(s[0]));
+                ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentMinute(Integer.parseInt(s[1]));
             }
         }
         mSaveButton = mView.findViewById(R.id.btn_save);
@@ -167,6 +149,8 @@ public class CategoryEditFragment extends Fragment{
                 mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
                 Category c = new Category(mName, mNotification, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
                 mCategoryReference.push().setValue(c);
+                Intent intent = new Intent(mActivity, CategoryListActivity.class);
+                startActivity(intent);
             }
         });
 

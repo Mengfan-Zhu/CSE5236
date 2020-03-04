@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.CategoryEditActivity">
-<<<<<<< HEAD
+
         </activity>
         <activity android:name=".ui.ItemListActivity"></activity>
         <activity android:name=".TestActivity" />
@@ -20,20 +20,9 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-=======
 
         </activity>
 
-        <activity android:name=".ui.ItemListActivity"></activity>
-        <activity android:name=".TestActivity" />
-        <activity android:name=".ui.CategoryListActivity"></activity>
->>>>>>> ec39c7f0a58af31688413ef3ebec544a8ef57944
-        <activity
-            android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
     </application>
 
 </manifest>

@@ -105,7 +105,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             Intent intent = new Intent(mActivity, CategoryEditActivity.class);
                             intent.putExtra("categoryName",category.getName());
                             intent.putExtra("categoryFrequency",category.getFrequency());
-                            intent.putExtra("categorytTime",category.getTime());
+                            intent.putExtra("categoryTime",category.getTime());
                             intent.putExtra("categoryBegin",category.getBegin());
 //                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                             intent.putExtra("operation","Edit");
