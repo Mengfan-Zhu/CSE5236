@@ -107,6 +107,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             intent.putExtra("categoryFrequency",category.getFrequency());
                             intent.putExtra("categoryTime",category.getTime());
                             intent.putExtra("categoryBegin",category.getBegin());
+                            intent.putExtra("categoryId",categoryId);
 //                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                             intent.putExtra("operation","Edit");
                             startActivity(intent);
@@ -163,10 +164,10 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
         mCategoryList.addView(mCategoryLayout);
 
-        Category newCategory1 = new Category("food","20200802","1","8:00");
-        Category newCategory2 = new Category("medicine","20200802","1","8:00");
-        mCategoryReference.push().setValue(newCategory1);
-        mCategoryReference.push().setValue(newCategory2);
+//        Category newCategory1 = new Category("food","20200802","1","8:00");
+//        Category newCategory2 = new Category("medicine","20200802","1","8:00");
+//        mCategoryReference.push().setValue(newCategory1);
+//        mCategoryReference.push().setValue(newCategory2);
         Query categoryQuery = mCategoryReference.orderByChild("name");
         showCategoryList(categoryQuery);
         Button addButton = mView.findViewById(R.id.btn_add_category);
@@ -185,13 +186,13 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         switch (view.getId()) {
             case R.id.btn_add_category:
                 Intent intent = new Intent(mActivity, CategoryEditActivity.class);
+                intent.putExtra("operation","Add");
                 startActivity(intent);
                 break;
             case R.id.btn_logout:
                 // [START auth_fui_signout]
                 mAuth.signOut();
                 Intent logoutIntent = new Intent(mActivity, MainActivity.class);
-                logoutIntent.putExtra("operation","Add");
                 startActivity(logoutIntent);
                 break;
 //                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
