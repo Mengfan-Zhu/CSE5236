@@ -98,7 +98,7 @@ public class CategoryEditFragment extends Fragment{
                         Category c = dataSnapshot.getValue(Category.class);
                         ((EditText)mView.findViewById(R.id.text_category_name)).setText(c.getBegin());
                         int pos = 0;
-                        switch (c.getFrequency()){
+                        switch (c.getBegin()){
                             case "1 day before":
                                 pos = 0;
                                 break;
@@ -119,6 +119,24 @@ public class CategoryEditFragment extends Fragment{
                                 break;
                         }
                         ((Spinner)mView.findViewById(R.id.notification_setting)).setSelection(pos);
+                        switch (c.getFrequency()){
+                            case "3 days":
+                                ((RadioButton)mView.findViewById(R.id.btn_1)).setChecked(false);
+                                ((RadioButton)mView.findViewById(R.id.btn_2)).setChecked(true);
+                                break;
+                            case "1 week":
+                                ((RadioButton)mView.findViewById(R.id.btn_1)).setChecked(false);
+                                ((RadioButton)mView.findViewById(R.id.btn_3)).setChecked(true);
+                                break;
+                            case "2 weeks":
+                                ((RadioButton)mView.findViewById(R.id.btn_1)).setChecked(false);
+                                ((RadioButton)mView.findViewById(R.id.btn_4)).setChecked(true);
+                                break;
+                            case "1 month":
+                                ((RadioButton)mView.findViewById(R.id.btn_1)).setChecked(false);
+                                ((RadioButton)mView.findViewById(R.id.btn_5)).setChecked(true);
+                                break;
+                        }
                         String[] s = c.getTime().split(":");
                         //Not sure if it is correct.....
                         ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentHour(Integer.parseInt(s[0]));
