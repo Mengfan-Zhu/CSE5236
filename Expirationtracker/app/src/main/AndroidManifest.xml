@@ -11,25 +11,12 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.CategoryEditActivity">
-<<<<<<< HEAD
 
         </activity>
-        <activity android:name=".ui.ItemListActivity"></activity>
-        <activity android:name=".TestActivity" />
-        <activity android:name=".ui.CategoryListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-=======
->>>>>>> 52a2b5e2069584d13bb7d4b20a2b511ef13a1dc7
-
-        </activity>
-<<<<<<< HEAD
-=======
 
         <activity android:name=".ui.ItemListActivity"></activity>
         <activity android:name=".TestActivity" />
         <activity android:name=".ui.CategoryListActivity"></activity>
->>>>>>> 52a2b5e2069584d13bb7d4b20a2b511ef13a1dc7
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
