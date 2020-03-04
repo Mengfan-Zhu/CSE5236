@@ -58,13 +58,10 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // add wrap layout
-
                 // add each layout
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String categoryId = currentSnapshot.getKey();
-                    Category category = currentSnapshot.getValue(Category.class);
+                    final Category category = currentSnapshot.getValue(Category.class);
                     // linearLayout for one category content
                     LinearLayout categoryContent = new LinearLayout(mActivity);
                     categoryContent.setOrientation(LinearLayout.VERTICAL);
@@ -105,8 +102,13 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
-                            intent.putExtra("operation","Edit");
+                            Intent intent = new Intent(mActivity, CategoryEditActivity.class);
+                            intent.putExtra("categoryName",category.getName());
+                            intent.putExtra("categoryFrequency",category.getFrequency());
+                            intent.putExtra("categorytTime",category.getTime());
+                            intent.putExtra("categoryBegin",category.getBegin());
+//                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+//                            intent.putExtra("operation","Edit");
                             startActivity(intent);
                         }
                     });
@@ -167,6 +169,14 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         mCategoryReference.push().setValue(newCategory2);
         Query categoryQuery = mCategoryReference.orderByChild("name");
         showCategoryList(categoryQuery);
+        Button addButton = mView.findViewById(R.id.btn_add_category);
+        if (addButton != null) {
+            addButton.setOnClickListener(this);
+        }
+        Button logoutButton = mView.findViewById(R.id.btn_logout);
+        if (logoutButton != null) {
+            logoutButton.setOnClickListener(this);
+        }
         return mView;
     }
 
@@ -174,15 +184,23 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_category:
-                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
-                        intent.putExtra("operation","Add");
-                        startActivity(intent);
-                    }
-                });
-
+                Intent intent = new Intent(mActivity, CategoryEditActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_logout:
+                // [START auth_fui_signout]
+                mAuth.signOut();
+                Intent logoutIntent = new Intent(mActivity, MainActivity.class);
+                startActivity(logoutIntent);
+                break;
+//                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+//                        intent.putExtra("operation","Add");
+//                        startActivity(intent);
+//                    }
+//                });
 
         }
     }
