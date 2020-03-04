@@ -1,9 +1,11 @@
 package com.example.expirationtracker.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -11,12 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.app.Activity;
-import com.example.expirationtracker.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
+import android.widget.TimePicker;
 
+import com.example.expirationtracker.R;
+import com.example.expirationtracker.model.Category;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.sql.Time;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +42,7 @@ import java.util.ArrayList;
  * Use the {@link CategoryEditFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoryEditFragment extends Fragment {
+public class CategoryEditFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     // TODO: Rename and change types of parameters
@@ -39,6 +54,13 @@ public class CategoryEditFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
     private View mView;
+
+
+    Button mSaveButton;
+    String mName;
+    String mNotification;
+    String mFrequency;
+    String mRemindingTime;
     public CategoryEditFragment() {
         // Required empty public constructor
     }
@@ -61,48 +83,74 @@ public class CategoryEditFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_category_edit, container, false);
         mAuth = FirebaseAuth.getInstance();
 
+        Intent intent = getActivity().getIntent();
 
-        //bindViews(mView);
+        if(intent != null){
+            if( intent.getStringExtra("operation").equals("Edit")){
+                mCategoryReference = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid()).addValueEventListener(new ValueEventListener(){
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot){
+                        Category c = dataSnapshot.getValue(Category.class);
+                        ((EditText)mView.findViewById(R.id.text_category_name)).setText(c.getBegin());
+                        int pos = 0;
+                        switch (c.getFrequency()){
+                            case "1 day before":
+                                pos = 0;
+                                break;
+                            case "3 days before":
+                                pos = 1;
+                                break;
+                            case "1 week before":
+                                pos = 2;
+                                break;
+                            case "10 days before":
+                                pos = 3;
+                                break;
+                            case "1 month before":
+                                pos = 4;
+                                break;
+                            case "3 months before":
+                                pos = 5;
+                                break;
+                        }
+                        ((Spinner)mView.findViewById(R.id.notification_setting)).setSelection(pos);
+                        String[] s = c.getTime().split(":");
+                        //Not sure if it is correct.....
+                        ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentHour(Integer.parseInt(s[0]));
+                        ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentMinute(Integer.parseInt(s[1]));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+
+                });
+            }
+        }
+
+        mSaveButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                mName = ((EditText)view.findViewById(R.id.text_category_name)).getText().toString();
+                mNotification = ((Spinner)view.findViewById(R.id.notification_setting)).getSelectedItem().toString();
+                int selectedId = ((RadioGroup)view.findViewById(R.id.frequency)).getCheckedRadioButtonId();
+                mFrequency = ((RadioButton)view.findViewById(selectedId)).getText().toString();
+                int mHourRemindingTime =((TimePicker) view.findViewById(R.id.time_picker)).getCurrentHour();
+                int mMinuteRemindingTime = ((TimePicker) view.findViewById(R.id.time_picker)).getCurrentMinute();
+
+                Category c = new Category(mName, mNotification, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
+                mCategoryReference.push().setValue(c);
+            }
+        });
+
+
         // Inflate the layout for this fragment
         return mView;
-    }
-
-    private void bindViews(View v){
-        spin = (Spinner) v.findViewById(R.id.notification_setting);
-        mData.add("1 day before");
-        mData.add("3 days before");
-        mData.add("1 week before");
-        mData.add("10 days before");
-        mData.add("1 month before");
-        mData.add("3 months before");
-        spin.setOnItemSelectedListener(new NotificationOnItemSelectedListener());
-
-
-    }
-
-    private class  NotificationOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
     }
 
 

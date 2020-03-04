@@ -107,7 +107,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             intent.putExtra("categoryFrequency",category.getFrequency());
                             intent.putExtra("categorytTime",category.getTime());
                             intent.putExtra("categoryBegin",category.getBegin());
-
+//                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+//                            intent.putExtra("operation","Edit");
                             startActivity(intent);
                         }
                     });
@@ -192,6 +193,15 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 Intent logoutIntent = new Intent(mActivity, MainActivity.class);
                 startActivity(logoutIntent);
                 break;
+//                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+//                        intent.putExtra("operation","Add");
+//                        startActivity(intent);
+//                    }
+//                });
+
         }
     }
 }
