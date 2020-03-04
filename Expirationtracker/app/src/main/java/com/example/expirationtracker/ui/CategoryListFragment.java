@@ -191,6 +191,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 // [START auth_fui_signout]
                 mAuth.signOut();
                 Intent logoutIntent = new Intent(mActivity, MainActivity.class);
+                logoutIntent.putExtra("operation","Add");
                 startActivity(logoutIntent);
                 break;
 //                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
