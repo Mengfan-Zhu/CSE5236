@@ -9,23 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-<<<<<<< HEAD
-        <activity android:name=".ui.CategoryEditActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".ui.CategoryEditActivity">
+
         </activity>
-=======
+
         <activity android:name=".ui.ItemListActivity"></activity>
->>>>>>> b3ea4de0b9f44e7d85e703d52b75f4251c7a6025
         <activity android:name=".TestActivity" />
         <activity android:name=".ui.CategoryListActivity"></activity>
         <activity
             android:name=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

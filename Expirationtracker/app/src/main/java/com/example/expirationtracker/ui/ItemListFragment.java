@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,10 +48,12 @@ public class ItemListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        mActivity = getActivity();
+        Log.e("List","onCreateView");
         // TODO: Need to load all categories from database.
         mView = inflater.inflate(R.layout.fragment_item_list, container, false);
         mAuth = FirebaseAuth.getInstance();
-        Intent intent = getActivity().getIntent();
+        Intent intent = mActivity.getIntent();
         if (intent != null) {
             mCategoryId = intent.getStringExtra("categoryId");
         }
@@ -61,22 +64,26 @@ public class ItemListFragment extends Fragment {
         mItemReference.push().setValue(newCategory2);
         Query itemQuery = mItemReference.orderByChild("name");
         ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
-        mItemLayout = new LinearLayout(getActivity());
+        itemList.setFillViewport(true);
+        mItemLayout = new LinearLayout(mActivity);
+        mItemLayout.setPadding(10,10,10,400);
         mItemLayout.setOrientation(LinearLayout.VERTICAL);
         itemList.addView(mItemLayout);
         ValueEventListener itemListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // add wrap layout
-                mActivity = getActivity();
                 // add each layout
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String itemId = currentSnapshot.getKey();
                     Item item = currentSnapshot.getValue(Item.class);
                     // linearLayout for one item content
                     LinearLayout itemContent = new LinearLayout(mActivity);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(10, 10, 10, 10);
                     itemContent.setOrientation(LinearLayout.VERTICAL);
-                    itemContent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    itemContent.setLayoutParams(layoutParams);
                     itemContent.setDividerPadding(10);
                     itemContent.setBackgroundResource(R.drawable.bg_item);
                     itemContent.setClickable(true);

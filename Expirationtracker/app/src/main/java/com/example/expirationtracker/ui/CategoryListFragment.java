@@ -3,6 +3,7 @@ package com.example.expirationtracker.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import androidx.fragment.app.Fragment;
 
@@ -38,6 +39,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
     private View mView;
+    private ScrollView mCategoryList;
     private LinearLayout mCategoryLayout;
     private Activity mActivity;
 //    // TODO: Rename and change types of parameters
@@ -51,27 +53,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public void showCategoryList(Query categoryQuery){
 
-        // TODO: Need to load all categories from database.
-        mView = inflater.inflate(R.layout.fragment_category_list, container, false);
-        mAuth = FirebaseAuth.getInstance();
-//        mCategories = view.findViewById(R.id.category_list);
-        //Button addButton = v.findViewById(R.id.btn_add);
-        //if(addButton != null){
-        //
-        //}
-
-        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
-        mActivity = getActivity();
-        Query categoryQuery = mCategoryReference.orderByChild("name");
-        ScrollView categoryList = (ScrollView) mView.findViewById(R.id.category_layout);
-        mCategoryLayout = new LinearLayout(mActivity);
-        mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
-        categoryList.addView(mCategoryLayout);
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,14 +68,17 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                     // linearLayout for one category content
                     LinearLayout categoryContent = new LinearLayout(mActivity);
                     categoryContent.setOrientation(LinearLayout.VERTICAL);
-                    categoryContent.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(10, 10, 10, 10);
+                    categoryContent.setLayoutParams(layoutParams);
                     categoryContent.setDividerPadding(10);
                     categoryContent.setBackgroundResource(R.drawable.bg_item);
                     categoryContent.setClickable(true);
                     categoryContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(getActivity(), ItemListActivity.class);
+                            Intent intent = new Intent(mActivity, ItemListActivity.class);
                             intent.putExtra("categoryId",categoryId);
                             startActivity(intent);
                         }
@@ -131,14 +117,19 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                         @Override
                         public void onClick(View v) {
                             mCategoryReference.child(categoryId).removeValue();
+                            DatabaseReference itemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(categoryId);
+                            if(itemReference != null){
+                                itemReference.removeValue();
+                            }
 
+                            mCategoryLayout.removeAllViews();
                         }
                     });
                     buttonsLayout.addView(deleteButton);
                     categoryContent.addView(buttonsLayout);
                     mCategoryLayout.addView(categoryContent);
                 }
-                // ...
+
             }
 
             @Override
@@ -146,9 +137,34 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 // Getting Post failed, log a message
                 // ...
             }
+
         };
         categoryQuery.addValueEventListener(postListener);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        Log.e("category","onCreateView");
+
+        // TODO: Need to load all categories from database.
+        mView = inflater.inflate(R.layout.fragment_category_list, container, false);
+        mActivity = getActivity();
+        mAuth = FirebaseAuth.getInstance();
+        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
+        mCategoryList = (ScrollView) mView.findViewById(R.id.category_layout);
+        mCategoryLayout = new LinearLayout(mActivity);
+        mCategoryLayout.setPadding(10,10,10,400);
+        mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
+        mCategoryList.addView(mCategoryLayout);
+
+        Category newCategory1 = new Category("food","20200802","1","8:00");
+        Category newCategory2 = new Category("medicine","20200802","1","8:00");
+        mCategoryReference.push().setValue(newCategory1);
+        mCategoryReference.push().setValue(newCategory2);
+        Query categoryQuery = mCategoryReference.orderByChild("name");
+        showCategoryList(categoryQuery);
         return mView;
     }
 
