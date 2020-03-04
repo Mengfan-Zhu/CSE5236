@@ -117,7 +117,9 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //TODO
+                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+                            intent.putExtra("operation","Edit");
+                            startActivity(intent);
                         }
                     });
                     buttonsLayout.addView(editButton);
@@ -153,6 +155,14 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_category:
+                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+                        intent.putExtra("operation","Add");
+                        startActivity(intent);
+                    }
+                });
 
 
         }
