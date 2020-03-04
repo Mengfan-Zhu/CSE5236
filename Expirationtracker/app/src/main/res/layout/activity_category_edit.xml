@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <fragment class="com.example.expirationtracker.ui.CategoryEditFragment"
-        android:id="@+id/edit_fragment"
+        android:id="@+id/category_edit_fragment"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

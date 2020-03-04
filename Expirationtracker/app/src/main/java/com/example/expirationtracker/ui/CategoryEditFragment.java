@@ -90,7 +90,7 @@ public class CategoryEditFragment extends Fragment{
 
         Intent intent = getActivity().getIntent();
 
-        if(intent != null){
+        if(intent.getStringExtra("operation") != null){
             if( intent.getStringExtra("operation").equals("Edit")){
                 ((EditText)mView.findViewById(R.id.text_category_name)).setText(intent.getStringExtra("categoryName"));
                 int pos = 0;
@@ -155,16 +155,16 @@ public class CategoryEditFragment extends Fragment{
                 });
             }
         }
-
+        mSaveButton = mView.findViewById(R.id.btn_save);
         mSaveButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
-                mName = ((EditText)view.findViewById(R.id.text_category_name)).getText().toString();
-                mNotification = ((Spinner)view.findViewById(R.id.notification_setting)).getSelectedItem().toString();
-                int selectedId = ((RadioGroup)view.findViewById(R.id.frequency)).getCheckedRadioButtonId();
-                mFrequency = ((RadioButton)view.findViewById(selectedId)).getText().toString();
-                int mHourRemindingTime =((TimePicker) view.findViewById(R.id.time_picker)).getCurrentHour();
-                int mMinuteRemindingTime = ((TimePicker) view.findViewById(R.id.time_picker)).getCurrentMinute();
-
+                mName = ((EditText)mView.findViewById(R.id.text_category_name)).getText().toString();
+                mNotification = ((Spinner)mView.findViewById(R.id.notification_setting)).getSelectedItem().toString();
+                int selectedId = ((RadioGroup)mView.findViewById(R.id.frequency)).getCheckedRadioButtonId();
+                mFrequency = ((RadioButton)mView.findViewById(selectedId)).getText().toString();
+                int mHourRemindingTime =((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentHour();
+                int mMinuteRemindingTime = ((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentMinute();
+                mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
                 Category c = new Category(mName, mNotification, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
                 mCategoryReference.push().setValue(c);
             }
