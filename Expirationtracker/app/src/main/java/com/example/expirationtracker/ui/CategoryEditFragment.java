@@ -87,7 +87,7 @@ public class CategoryEditFragment extends Fragment{
         mView = inflater.inflate(R.layout.fragment_category_edit, container, false);
         mAuth = FirebaseAuth.getInstance();
         mActivity = getActivity();
-        Intent intent = getActivity().getIntent();
+        final Intent intent = getActivity().getIntent();
 
         if(intent.getStringExtra("operation") != null){
             if( intent.getStringExtra("operation").equals("Edit")){
@@ -148,9 +148,14 @@ public class CategoryEditFragment extends Fragment{
                 int mMinuteRemindingTime = ((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentMinute();
                 mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
                 Category c = new Category(mName, mNotification, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
-                mCategoryReference.push().setValue(c);
-                Intent intent = new Intent(mActivity, CategoryListActivity.class);
-                startActivity(intent);
+                if((intent.getStringExtra("operation")).equals("Edit")){
+                    mCategoryReference.child(intent.getStringExtra("categoryId")).setValue(c);
+                }else {
+                    mCategoryReference.push().setValue(c);
+                }
+                Intent newIntent = new Intent(mActivity, CategoryListActivity.class);
+                startActivity(newIntent);
+
             }
         });
 
