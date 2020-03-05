@@ -76,7 +76,7 @@ public class ItemListFragment extends Fragment {
                 // add each layout
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String itemId = currentSnapshot.getKey();
-                    Item item = currentSnapshot.getValue(Item.class);
+                    final Item item = currentSnapshot.getValue(Item.class);
                     // linearLayout for one item content
                     LinearLayout itemContent = new LinearLayout(mActivity);
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -118,7 +118,15 @@ public class ItemListFragment extends Fragment {
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //TODO
+                            Intent intent = new Intent(mActivity, ItemEditActivity.class);
+                            intent.putExtra("itemName",item.getName());
+                            intent.putExtra("itemExpirationDate",item.getExpirationDate());
+                            intent.putExtra("itemQuantity",item.getQuantity());
+                            intent.putExtra("itemDescription",item.getDescription());
+                            intent.putExtra("itemId",itemId);
+//                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
+                            intent.putExtra("operation","Edit");
+                            startActivity(intent);
                         }
                     });
                     buttonsLayout.addView(editButton);

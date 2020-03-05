@@ -45,10 +45,7 @@ public class CategoryEditFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     // TODO: Rename and change types of parameters
-    private Spinner spin;
-    private ArrayList<String> mData = null;
-    private BaseAdapter myAdapter = null;
-    private OnFragmentInteractionListener mListener;
+
     private Activity mActivity;
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
