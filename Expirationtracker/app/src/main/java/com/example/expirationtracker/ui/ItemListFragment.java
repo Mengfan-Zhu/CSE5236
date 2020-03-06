@@ -27,8 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Date;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -40,6 +38,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
     private String mCategoryId;
     private LinearLayout mItemLayout;
     private Activity mActivity;
+    String TAG = "Item List Fragment";
     public ItemListFragment() {
         // Required empty public constructor
     }
@@ -58,10 +57,6 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             mCategoryId = intent.getStringExtra("categoryId");
         }
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-        Item newCategory1 = new Item("meat","20200101",1,"meat");
-        Item newCategory2 = new Item("bread","20200102",1,"bread");
-        mItemReference.push().setValue(newCategory1);
-        mItemReference.push().setValue(newCategory2);
         Query itemQuery = mItemReference.orderByChild("name");
         ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
         itemList.setFillViewport(true);
@@ -74,6 +69,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // add wrap layout
                 // add each layout
+                mItemLayout.removeAllViews();
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String itemId = currentSnapshot.getKey();
                     final Item item = currentSnapshot.getValue(Item.class);
@@ -120,7 +116,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                             Intent intent = new Intent(mActivity, ItemEditActivity.class);
                             intent.putExtra("itemName",item.getName());
                             intent.putExtra("itemExpirationDate",item.getExpirationDate());
-                            intent.putExtra("itemQuantity",item.getQuantity());
+                            intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
                             intent.putExtra("itemDescription",item.getDescription());
                             intent.putExtra("itemId",itemId);
                             intent.putExtra("categoryId",mCategoryId);
@@ -144,17 +140,18 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                     itemContent.addView(buttonsLayout);
                     mItemLayout.addView(itemContent);
                 }
-                // ...
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                // ...
+                Log.e(TAG, "FAIL TO UPDATE");
             }
         };
         itemQuery.addValueEventListener(itemListener);
-
+        Button addButton = mView.findViewById(R.id.btn_add_item);
+        if (addButton != null) {
+            addButton.setOnClickListener(this);
+        }
         return mView;
     }
 
@@ -164,6 +161,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             case R.id.btn_add_item:
                 Intent intent = new Intent(mActivity, ItemEditActivity.class);
                 intent.putExtra("operation", "Add");
+                intent.putExtra("categoryId",mCategoryId);
                 startActivity(intent);
                 break;
         }

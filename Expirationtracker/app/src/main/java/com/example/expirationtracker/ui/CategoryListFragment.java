@@ -15,8 +15,10 @@ import android.view.LayoutInflater;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,11 +28,6 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- */
 public class CategoryListFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
@@ -38,6 +35,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     private ScrollView mCategoryList;
     private LinearLayout mCategoryLayout;
     private Activity mActivity;
+    String TAG = "Category List Fragment";
 
     public CategoryListFragment() {
         // Required empty public constructor
@@ -46,10 +44,11 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
 
     public void showCategoryList(Query categoryQuery){
 
-        ValueEventListener postListener = new ValueEventListener() {
+        ValueEventListener categoryListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // add each layout
+                mCategoryLayout.removeAllViews();
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String categoryId = currentSnapshot.getKey();
                     final Category category = currentSnapshot.getValue(Category.class);
@@ -129,32 +128,31 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                // ...
+                Log.e(TAG, "FAIL TO UPDATE");
             }
 
         };
-        categoryQuery.addValueEventListener(postListener);
+        categoryQuery.addValueEventListener(categoryListener);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.e("category","onCreateView");
-
-        // TODO: Need to load all categories from database.
         mView = inflater.inflate(R.layout.fragment_category_list, container, false);
         mActivity = getActivity();
+        // set up firebase reference
         mAuth = FirebaseAuth.getInstance();
         mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
+        // set up layouts
         mCategoryList = (ScrollView) mView.findViewById(R.id.category_layout);
         mCategoryLayout = new LinearLayout(mActivity);
         mCategoryLayout.setPadding(10,10,10,400);
         mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
-
+        mCategoryList.addView(mCategoryLayout);
         Query categoryQuery = mCategoryReference.orderByChild("name");
         showCategoryList(categoryQuery);
+        // set up buttons
         Button addButton = mView.findViewById(R.id.btn_add_category);
         if (addButton != null) {
             addButton.setOnClickListener(this);
@@ -175,7 +173,6 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 startActivity(intent);
                 break;
             case R.id.btn_logout:
-                // [START auth_fui_signout]
                 mAuth.signOut();
                 Intent logoutIntent = new Intent(mActivity, MainActivity.class);
                 startActivity(logoutIntent);

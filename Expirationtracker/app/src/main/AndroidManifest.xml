@@ -12,8 +12,9 @@
         <activity android:name=".ui.ItemEditActivity"></activity>
         <activity android:name=".ui.CategoryEditActivity"></activity>
         <activity android:name=".ui.ItemListActivity" />
-        <activity android:name=".TestActivity" />
         <activity android:name=".ui.CategoryListActivity">
+        </activity>
+        <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

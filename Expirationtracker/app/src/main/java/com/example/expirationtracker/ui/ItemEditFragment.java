@@ -26,28 +26,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ItemEditFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ItemEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ItemEditFragment extends Fragment {
 
     private Activity mActivity;
     private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
     private View mView;
-
     private String mCategoryId;
-    Button mSaveButton;
-    String mName;
-    String mQuantity;
-    String mDescription;
-
-    private OnFragmentInteractionListener mListener;
+    private Button mSaveButton;
+    private String mName;
+    private String mQuantity;
+    private String mDescription;
 
     public ItemEditFragment() {
         // Required empty public constructor
@@ -64,28 +54,35 @@ public class ItemEditFragment extends Fragment {
         final Intent intent = mActivity.getIntent();
         mCategoryId = intent.getStringExtra("categoryId");
         if(intent.getStringExtra("operation") != null) {
+            // deal with edit
             if (intent.getStringExtra("operation").equals("Edit")) {
                 ((EditText)mView.findViewById(R.id.text_item_name)).setText(intent.getStringExtra("itemName"));
                 String date = intent.getStringExtra("itemExpirationDate");
-                ((DatePicker) mView.findViewById(R.id.date_picker)).updateDate(Integer.parseInt(date.substring(0,4)), Integer.parseInt(date.substring(4,6)), Integer.parseInt(date.substring(6,8)));
+                ((DatePicker) mView.findViewById(R.id.date_picker)).updateDate(Integer.parseInt(date.substring(0,4)), Integer.parseInt(date.substring(4,6))-1 , Integer.parseInt(date.substring(6,8)));
                 ((TextView)mView.findViewById((R.id.quantity))).setText(intent.getStringExtra("itemQuantity"));
                 ((EditText)mView.findViewById(R.id.description)).setText(intent.getStringExtra("itemDescription"));
 
             }
         }
-
+        // save
         mSaveButton = mView.findViewById(R.id.btn_item_save);
         mSaveButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 mName = ((EditText)mView.findViewById(R.id.text_item_name)).getText().toString();
                 int day = ((DatePicker) mView.findViewById(R.id.date_picker)).getDayOfMonth();
-                int month = ((DatePicker) mView.findViewById(R.id.date_picker)).getMonth();
+                int month = ((DatePicker) mView.findViewById(R.id.date_picker)).getMonth()+1;
                 int year = ((DatePicker) mView.findViewById(R.id.date_picker)).getYear();
-
+                String date = "" + year;
+                if(month < 10){
+                    date  = date + "0" + month;
+                }
+                if(day < 10){
+                    date  = date + "0" + day;
+                }
                 mQuantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
                 mDescription = ((EditText)mView.findViewById(R.id.description)).getText().toString();
                 mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-                Item i = new Item(mName, "" + year + "" + month + "" + day, Integer.parseInt(mQuantity),  mDescription);
+                Item i = new Item(mName, date, Integer.parseInt(mQuantity),  mDescription);
                 if((intent.getStringExtra("operation")).equals("Edit")){
                     mItemReference.child(intent.getStringExtra("itemId")).setValue(i);
                 }else {
@@ -97,22 +94,6 @@ public class ItemEditFragment extends Fragment {
 
             }
         });
-
         return mView;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }
