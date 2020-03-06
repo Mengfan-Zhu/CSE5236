@@ -124,6 +124,7 @@ public class ItemListFragment extends Fragment {
                             intent.putExtra("itemQuantity",item.getQuantity());
                             intent.putExtra("itemDescription",item.getDescription());
                             intent.putExtra("itemId",itemId);
+                            intent.putExtra("categoryId",mCategoryId);
 //                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                             intent.putExtra("operation","Edit");
                             startActivity(intent);

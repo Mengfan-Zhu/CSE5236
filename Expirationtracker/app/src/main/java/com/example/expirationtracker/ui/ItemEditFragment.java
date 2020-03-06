@@ -41,7 +41,7 @@ public class ItemEditFragment extends Fragment {
     private DatabaseReference mItemReference;
     private View mView;
 
-
+    private String mCategoryId;
     Button mSaveButton;
     ImageView mAddButton;
     ImageView mMinusButton;
@@ -80,7 +80,7 @@ public class ItemEditFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mActivity = getActivity();
         final Intent intent = mActivity.getIntent();
-
+        mCategoryId = intent.getStringExtra("categoryId");
         if(intent.getStringExtra("operation") != null) {
             if (intent.getStringExtra("operation").equals("Edit")) {
                 ((EditText)mView.findViewById(R.id.text_item_name)).setText(intent.getStringExtra("itemName"));
@@ -102,7 +102,7 @@ public class ItemEditFragment extends Fragment {
 
                 mQuantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
                 mDescription = ((EditText)mView.findViewById(R.id.description)).getText().toString();
-                mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid());
+                mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
                 Item i = new Item(mName, "" + year + "" + month + "" + day, Integer.parseInt(mQuantity), 0, mDescription);
                 if((intent.getStringExtra("operation")).equals("Edit")){
                     mItemReference.child(intent.getStringExtra("itemId")).setValue(i);
@@ -110,27 +110,29 @@ public class ItemEditFragment extends Fragment {
                     mItemReference.push().setValue(i);
                 }
                 Intent newIntent = new Intent(mActivity, ItemListActivity.class);
+                newIntent.putExtra("categoryId",mCategoryId);
                 startActivity(newIntent);
 
             }
         });
 
-        mAddButton = mView.findViewById(R.id.btn_add_quantity);
-        mAddButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
-                ((TextView)mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) + 1 + "");
-            }
-        });
-        mMinusButton = mView.findViewById(R.id.btn_minus_quantity);
-        mMinusButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
-                if(Integer.parseInt(quantity) > 0) {
-                    ((TextView) mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) - 1 + "");
-                }
-            }
-        });
+//        mAddButton = mView.findViewById(R.id.btn_add_quantity);
+//        mAddButton.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View view){
+//                String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
+//                ((TextView)mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) + 1 + "");
+//            }
+//        });
+//        String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
+//        mMinusButton = mView.findViewById(R.id.btn_minus_quantity);
+//        mMinusButton.setOnClickListener(new View.OnClickListener(){
+//            public void onClick(View view){
+//                String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
+//                if(Integer.parseInt(quantity) > 0) {
+//                    ((TextView) mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) - 1 + "");
+//                }
+//            }
+//        });
 
         return mView;
     }
