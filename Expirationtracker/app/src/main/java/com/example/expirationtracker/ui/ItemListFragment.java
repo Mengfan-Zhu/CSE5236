@@ -32,7 +32,7 @@ import java.util.Date;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ItemListFragment extends Fragment {
+public class ItemListFragment extends Fragment implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
@@ -125,7 +125,6 @@ public class ItemListFragment extends Fragment {
                             intent.putExtra("itemDescription",item.getDescription());
                             intent.putExtra("itemId",itemId);
                             intent.putExtra("categoryId",mCategoryId);
-//                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                             intent.putExtra("operation","Edit");
                             startActivity(intent);
                         }
@@ -140,12 +139,6 @@ public class ItemListFragment extends Fragment {
                         public void onClick(View v) {
                             mItemReference.child(itemId).removeValue();
                             mItemLayout.removeAllViews();
-//                            mView.postInvalidate();
-//                            v.postInvalidate();
-//                            mActivity.finish();
-//                            Intent intent = new Intent(mActivity, ItemListActivity.class);
-//                            intent.putExtra("categoryId",mCategoryId);
-//                            startActivity(intent);
                         }
                     });
                     buttonsLayout.addView(deleteButton);
@@ -166,4 +159,14 @@ public class ItemListFragment extends Fragment {
         return mView;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_add_item:
+                Intent intent = new Intent(mActivity, ItemEditActivity.class);
+                intent.putExtra("operation", "Add");
+                startActivity(intent);
+                break;
+        }
+    }
 }

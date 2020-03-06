@@ -43,8 +43,6 @@ public class ItemEditFragment extends Fragment {
 
     private String mCategoryId;
     Button mSaveButton;
-    ImageView mAddButton;
-    ImageView mMinusButton;
     String mName;
     String mQuantity;
     String mDescription;
@@ -53,22 +51,6 @@ public class ItemEditFragment extends Fragment {
 
     public ItemEditFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ItemEditFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ItemEditFragment newInstance(String param1, String param2) {
-        ItemEditFragment fragment = new ItemEditFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
 
@@ -116,44 +98,8 @@ public class ItemEditFragment extends Fragment {
             }
         });
 
-//        mAddButton = mView.findViewById(R.id.btn_add_quantity);
-//        mAddButton.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View view){
-//                String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
-//                ((TextView)mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) + 1 + "");
-//            }
-//        });
-//        String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
-//        mMinusButton = mView.findViewById(R.id.btn_minus_quantity);
-//        mMinusButton.setOnClickListener(new View.OnClickListener(){
-//            public void onClick(View view){
-//                String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
-//                if(Integer.parseInt(quantity) > 0) {
-//                    ((TextView) mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) - 1 + "");
-//                }
-//            }
-//        });
-
         return mView;
     }
-
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
 
     /**
      * This interface must be implemented by activities that contain this

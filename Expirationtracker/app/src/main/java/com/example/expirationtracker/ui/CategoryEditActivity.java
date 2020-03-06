@@ -14,13 +14,6 @@ public class CategoryEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_edit);
 
-//        TimePicker tp_test = (TimePicker) findViewById(R.id.time_picker);
-//        tp_test.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-//            @Override
-//            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-//                //TODO: store in database.
-//            }
-//        });
 
 
     }

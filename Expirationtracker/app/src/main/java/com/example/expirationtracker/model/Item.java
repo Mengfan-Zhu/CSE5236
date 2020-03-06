@@ -1,9 +1,6 @@
 package com.example.expirationtracker.model;
 
-import java.util.Date;
-
 public class Item {
-
     private String mName;
     private String mExpirationDate;
     private int mQuantity;

@@ -1,8 +1,5 @@
 package com.example.expirationtracker.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Category {
     private String mName;
     private String mBegin;

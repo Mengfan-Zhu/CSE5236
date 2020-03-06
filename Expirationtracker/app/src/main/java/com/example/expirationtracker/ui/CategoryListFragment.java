@@ -32,21 +32,12 @@ import com.google.firebase.database.ValueEventListener;
  * to handle interaction events.
  */
 public class CategoryListFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
     private View mView;
     private ScrollView mCategoryList;
     private LinearLayout mCategoryLayout;
     private Activity mActivity;
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-
-//    private OnFragmentInteractionListener mListener;
 
     public CategoryListFragment() {
         // Required empty public constructor
@@ -108,7 +99,6 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             intent.putExtra("categoryTime",category.getTime());
                             intent.putExtra("categoryBegin",category.getBegin());
                             intent.putExtra("categoryId",categoryId);
-//                            Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
                             intent.putExtra("operation","Edit");
                             startActivity(intent);
                         }
@@ -162,12 +152,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         mCategoryLayout = new LinearLayout(mActivity);
         mCategoryLayout.setPadding(10,10,10,400);
         mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
-        mCategoryList.addView(mCategoryLayout);
 
-//        Category newCategory1 = new Category("food","20200802","1","8:00");
-//        Category newCategory2 = new Category("medicine","20200802","1","8:00");
-//        mCategoryReference.push().setValue(newCategory1);
-//        mCategoryReference.push().setValue(newCategory2);
         Query categoryQuery = mCategoryReference.orderByChild("name");
         showCategoryList(categoryQuery);
         Button addButton = mView.findViewById(R.id.btn_add_category);
@@ -195,14 +180,6 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 Intent logoutIntent = new Intent(mActivity, MainActivity.class);
                 startActivity(logoutIntent);
                 break;
-//                view.findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(getActivity(), CategoryEditActivity.class);
-//                        intent.putExtra("operation","Add");
-//                        startActivity(intent);
-//                    }
-//                });
 
         }
     }

@@ -12,12 +12,9 @@ public class User {
     public String getUserName() {
         return mUserName;
     }
-
-
     public String getName() {
         return mName;
     }
-
     public void setName(String mName) {
         this.mName = mName;
     }

@@ -10,9 +10,6 @@ import com.example.expirationtracker.R;
 
 public class CategoryListActivity extends AppCompatActivity {
 
-//    protected int getLayoutResId() {
-//        return R.layout.fragment_category_list;
-//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
