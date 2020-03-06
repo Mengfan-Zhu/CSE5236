@@ -5,21 +5,18 @@ public class Item {
     private String mExpirationDate;
     private int mQuantity;
     private String mDescription;
-    private int mDaysToExpiry;
 
     public Item(){
         mName = "";
         mExpirationDate = "";
         mQuantity = 0;
         mDescription = "";
-        mDaysToExpiry = 0;
     }
-    public Item(String name, String expirationDate, int quantity, int daysToExpiry, String description) {
+    public Item(String name, String expirationDate, int quantity, String description) {
         mName = name;
         mExpirationDate = expirationDate;
         mQuantity = quantity;
         mDescription = description;
-        mDaysToExpiry = daysToExpiry;
     }
 
 
@@ -30,7 +27,6 @@ public class Item {
     public void setName(String name) {
         mName = name;
     }
-
 
     public String getExpirationDate() {
         return mExpirationDate;
@@ -56,11 +52,4 @@ public class Item {
         mDescription = description;
     }
 
-    public int getDaysToExpiry() {
-        return mDaysToExpiry;
-    }
-
-    public void setDaysToExpiry(int daysToExpiry) {
-        mDaysToExpiry = daysToExpiry;
-    }
 }

@@ -58,8 +58,8 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             mCategoryId = intent.getStringExtra("categoryId");
         }
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-        Item newCategory1 = new Item("meat","20200101",1,1,"meat");
-        Item newCategory2 = new Item("bread","20200102",1,1,"bread");
+        Item newCategory1 = new Item("meat","20200101",1,"meat");
+        Item newCategory2 = new Item("bread","20200102",1,"bread");
         mItemReference.push().setValue(newCategory1);
         mItemReference.push().setValue(newCategory2);
         Query itemQuery = mItemReference.orderByChild("name");
@@ -103,7 +103,6 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                     TextView contents = new TextView(mActivity);
                     contents.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     contents.setText("Expiration Date: " + item.getExpirationDate()
-                            + "\nDays To Expiry: " + item.getDaysToExpiry()
                             + "\nQuantity: " + item.getQuantity()
                             + "\nDescription: " + item.getDescription());
                     itemContent.addView(contents);

@@ -85,7 +85,7 @@ public class ItemEditFragment extends Fragment {
                 mQuantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
                 mDescription = ((EditText)mView.findViewById(R.id.description)).getText().toString();
                 mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-                Item i = new Item(mName, "" + year + "" + month + "" + day, Integer.parseInt(mQuantity), 0, mDescription);
+                Item i = new Item(mName, "" + year + "" + month + "" + day, Integer.parseInt(mQuantity),  mDescription);
                 if((intent.getStringExtra("operation")).equals("Edit")){
                     mItemReference.child(intent.getStringExtra("itemId")).setValue(i);
                 }else {
