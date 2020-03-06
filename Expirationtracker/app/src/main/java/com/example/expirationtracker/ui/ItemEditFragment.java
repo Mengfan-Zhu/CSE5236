@@ -79,11 +79,11 @@ public class ItemEditFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_item_edit, container, false);
         mAuth = FirebaseAuth.getInstance();
         mActivity = getActivity();
-        final Intent intent = getActivity().getIntent();
+        final Intent intent = mActivity.getIntent();
 
         if(intent.getStringExtra("operation") != null) {
             if (intent.getStringExtra("operation").equals("Edit")) {
-                ((EditText)mView.findViewById(R.id.text_category_name)).setText(intent.getStringExtra("itemName"));
+                ((EditText)mView.findViewById(R.id.text_item_name)).setText(intent.getStringExtra("itemName"));
                 String date = intent.getStringExtra("itemExpirationDate");
                 ((DatePicker) mView.findViewById(R.id.date_picker)).updateDate(Integer.parseInt(date.substring(0,4)), Integer.parseInt(date.substring(4,6)), Integer.parseInt(date.substring(6,8)));
                 ((TextView)mView.findViewById((R.id.quantity))).setText(intent.getStringExtra("itemQuantity"));
@@ -122,7 +122,7 @@ public class ItemEditFragment extends Fragment {
                 ((TextView)mView.findViewById(R.id.quantity)).setText(Integer.parseInt(quantity) + 1 + "");
             }
         });
-        mAddButton = mView.findViewById(R.id.btn_minus_quantity);
+        mMinusButton = mView.findViewById(R.id.btn_minus_quantity);
         mMinusButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 String quantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
@@ -135,23 +135,23 @@ public class ItemEditFragment extends Fragment {
         return mView;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+//
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mListener = null;
+//    }
 
     /**
      * This interface must be implemented by activities that contain this
