@@ -61,7 +61,9 @@ public class ItemEditFragment extends Fragment {
                 ((DatePicker) mView.findViewById(R.id.date_picker)).updateDate(Integer.parseInt(date.substring(0,4)), Integer.parseInt(date.substring(4,6))-1 , Integer.parseInt(date.substring(6,8)));
                 ((TextView)mView.findViewById((R.id.quantity))).setText(intent.getStringExtra("itemQuantity"));
                 ((EditText)mView.findViewById(R.id.description)).setText(intent.getStringExtra("itemDescription"));
-
+            }
+            else if(intent.getStringExtra("operation").equals("Scan")){
+                ((EditText)mView.findViewById(R.id.text_item_name)).setText(intent.getStringExtra("itemName"));
             }
         }
         // save
@@ -76,8 +78,14 @@ public class ItemEditFragment extends Fragment {
                 if(month < 10){
                     date  = date + "0" + month;
                 }
+                else{
+                    date = date + month;
+                }
                 if(day < 10){
                     date  = date + "0" + day;
+                }
+                else{
+                    date = date + day;
                 }
                 mQuantity = ((TextView)mView.findViewById(R.id.quantity)).getText().toString();
                 mDescription = ((EditText)mView.findViewById(R.id.description)).getText().toString();

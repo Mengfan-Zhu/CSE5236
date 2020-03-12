@@ -149,9 +149,9 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         };
         itemQuery.addValueEventListener(itemListener);
         Button addButton = mView.findViewById(R.id.btn_add_item);
-        if (addButton != null) {
-            addButton.setOnClickListener(this);
-        }
+        Button scanButton = mView.findViewById(R.id.btn_scan_item);
+        addButton.setOnClickListener(this);
+        scanButton.setOnClickListener(this);
         return mView;
     }
 
@@ -159,10 +159,16 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_item:
-                Intent intent = new Intent(mActivity, ItemEditActivity.class);
-                intent.putExtra("operation", "Add");
-                intent.putExtra("categoryId",mCategoryId);
-                startActivity(intent);
+                Intent addIntent = new Intent(mActivity, ItemEditActivity.class);
+                addIntent.putExtra("operation", "Add");
+                addIntent.putExtra("categoryId",mCategoryId);
+                startActivity(addIntent);
+                break;
+            case R.id.btn_scan_item:
+                Intent scanIntent = new Intent(mActivity, ScanActivity.class);
+                scanIntent.putExtra("operation", "Scan");
+                scanIntent.putExtra("categoryId",mCategoryId);
+                startActivity(scanIntent);
                 break;
         }
     }
