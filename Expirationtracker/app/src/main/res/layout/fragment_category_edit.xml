@@ -27,7 +27,7 @@
             android:gravity="center"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:text="Category Setting" />
 
         <Button
@@ -121,7 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="everyday"
-                    android:textSize="13sp"
+                    android:textSize="10sp"
                     android:checked="true"/>
 
                 <RadioButton
@@ -129,26 +129,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3 days"
-                    android:textSize="13sp"/>
+                    android:textSize="10sp"/>
 
                 <RadioButton
                     android:id="@+id/btn_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1 week"
-                    android:textSize="13sp"/>
+                    android:textSize="10sp"/>
                 <RadioButton
                     android:id="@+id/btn_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2 weeks"
-                    android:textSize="13sp"/>
+                    android:textSize="10sp"/>
                 <RadioButton
                     android:id="@+id/btn_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1 month"
-                    android:textSize="13sp"/>
+                    android:textSize="10sp"/>
             </RadioGroup>
         </LinearLayout>
 

@@ -18,5 +18,8 @@ public class User {
     public void setName(String mName) {
         this.mName = mName;
     }
+    public void setUserName(String mUserName) {
+        this.mUserName = mUserName;
+    }
 
 }

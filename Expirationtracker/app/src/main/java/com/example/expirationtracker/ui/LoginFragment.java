@@ -88,14 +88,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_login:
                 loginIn();
                 break;
-            /*
-            case R.id.exit_button:
-                FragmentActivity activity = getActivity();
-                if (activity != null) {
-                    activity.getSupportFragmentManager().popBackStack();
-                }
-
-             */
         }
     }
     private void loginIn() {

@@ -1,57 +1,37 @@
 package com.example.expirationtracker.ui;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import android.app.Activity;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.app.Activity;
 import android.widget.TimePicker;
 
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CategoryEditFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CategoryEditFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CategoryEditFragment extends Fragment{
     private Activity mActivity;
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
     private View mView;
-
-
-    Button mSaveButton;
-    String mName;
-    String mNotification;
-    String mFrequency;
+    private Button mSaveButton;
+    private String mName;
+    private String mNotification;
+    private String mFrequency;
     public CategoryEditFragment() {
         // Required empty public constructor
     }
@@ -65,7 +45,9 @@ public class CategoryEditFragment extends Fragment{
         final Intent intent = getActivity().getIntent();
 
         if(intent.getStringExtra("operation") != null){
+            // edit mode
             if( intent.getStringExtra("operation").equals("Edit")){
+                // get current contents
                 ((EditText)mView.findViewById(R.id.text_category_name)).setText(intent.getStringExtra("categoryName"));
                 int pos = 0;
                 switch (intent.getStringExtra("categoryBegin")){
@@ -112,6 +94,7 @@ public class CategoryEditFragment extends Fragment{
                 ((TimePicker) mView.findViewById(R.id.time_picker)).setCurrentMinute(Integer.parseInt(s[1]));
             }
         }
+        // save
         mSaveButton = mView.findViewById(R.id.btn_save);
         mSaveButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -133,25 +116,7 @@ public class CategoryEditFragment extends Fragment{
 
             }
         });
-
-
-        // Inflate the layout for this fragment
         return mView;
     }
 
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
