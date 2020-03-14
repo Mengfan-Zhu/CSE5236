@@ -15,7 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
+        <activity android:name=".ui.NavActivity"></activity>
+=======
         <activity android:name=".ui.ScanActivity"></activity>
+>>>>>>> 20d148ebb7be5c4452ce4a81d88f89bca0e1255e
         <activity android:name=".ui.ItemEditActivity" />
         <activity android:name=".ui.CategoryEditActivity" />
         <activity android:name=".ui.ItemListActivity" />
