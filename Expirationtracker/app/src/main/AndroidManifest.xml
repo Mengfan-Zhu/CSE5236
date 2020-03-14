@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.ItemEditActivity"></activity>
-        <activity android:name=".ui.CategoryEditActivity"></activity>
+        <activity android:name=".ui.NavActivity"></activity>
+        <activity android:name=".ui.ItemEditActivity" />
+        <activity android:name=".ui.CategoryEditActivity" />
         <activity android:name=".ui.ItemListActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".ui.CategoryListActivity">
