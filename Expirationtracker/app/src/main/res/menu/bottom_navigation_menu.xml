@@ -9,10 +9,10 @@
         android:id="@+id/navigation_category"
         android:icon="@drawable/ic_category"
         android:title="Category" />
-    <item
+    <!--item
         android:id="@+id/navigation_add"
         android:icon="@drawable/ic_add"
-        android:title="Add" />
+        android:title="Add" /-->
     <item
         android:id="@+id/navigation_setting"
         android:icon="@drawable/ic_setting"
