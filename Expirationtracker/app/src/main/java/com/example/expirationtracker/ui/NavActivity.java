@@ -19,7 +19,7 @@ public class NavActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nav);
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        openFragment(HomeFragment.newInstance());
+        //openFragment(HomeFragment.newInstance());
 
     }
 
@@ -35,7 +35,7 @@ public class NavActivity extends AppCompatActivity {
                 @Override public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.navigation_home:
-                            openFragment(HomeFragment.newInstance());
+                           // openFragment(HomeFragment.newInstance());
                             //TODO: need to create home page
                             return true;
                         case R.id.navigation_category:
@@ -47,7 +47,7 @@ public class NavActivity extends AppCompatActivity {
                         //TODO: do we have to have add button in nav bar?
 
                         case R.id.navigation_setting:
-                            openFragment(SettingFragment.newInstance());
+                            //openFragment(SettingFragment.newInstance());
                             //TODO: Need to create setting page.
                             return true;
                     }

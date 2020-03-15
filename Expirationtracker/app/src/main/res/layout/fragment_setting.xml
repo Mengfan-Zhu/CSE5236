@@ -3,16 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CategoryEditFragment"
+    tools:context=".ui.SettingFragment"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btn_setting_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
@@ -21,17 +20,16 @@
             tools:layout_editor_absoluteY="16dp" />
 
         <TextView
-            android:id="@+id/category_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:textSize="20sp"
-            android:text="Category Setting" />
+            android:textSize="25sp"
+            android:text="@string/account_setting" />
 
         <Button
-            android:id="@+id/btn_save"
+            android:id="@+id/btn_setting_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"
@@ -39,15 +37,32 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp" />
 
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contextClickable="true"
+            android:background="@drawable/bg_item">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="@string/your_name" />
+            <EditText
+                android:id="@+id/text_setting_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textSize="15sp"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_marginLeft="10dp"
@@ -59,17 +74,37 @@
             android:background="@drawable/bg_item">
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:text="Name" />
+                android:text="@string/user_name" />
+            <TexiView
+                android:id="@+id/text_setting_username"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:textSize="15sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:contextClickable="true"
+            android:background="@drawable/bg_item">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="@string/password" />
             <EditText
-                android:id="@+id/text_category_name"
+                android:id="@+id/text_setting_password"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:textSize="15sp"
-                />
+                android:inputType="textPassword"/>
         </LinearLayout>
 
         <LinearLayout
@@ -80,102 +115,19 @@
             android:orientation="vertical"
             android:contextClickable="true"
             android:background="@drawable/bg_item">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Frequency" />
-
-            <Spinner
-                android:id="@+id/notification_setting"
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:entries="@array/notification"/>
         </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Notification Setting" />
-
-            <RadioGroup
-                android:id="@+id/frequency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/btn_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="everyday"
-                    android:textSize="10sp"
-                    android:checked="true"/>
-
-                <RadioButton
-                    android:id="@+id/btn_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3 days"
-                    android:textSize="10sp"/>
-
-                <RadioButton
-                    android:id="@+id/btn_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 week"
-                    android:textSize="10sp"/>
-                <RadioButton
-                    android:id="@+id/btn_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2 weeks"
-                    android:textSize="10sp"/>
-                <RadioButton
-                    android:id="@+id/btn_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 month"
-                    android:textSize="10sp"/>
-            </RadioGroup>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="Reminding time" />
-
-            <TimePicker
-                android:id="@+id/time_picker"
-                android:layout_weight="4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:timePickerMode="spinner"/>
-
-
-        </LinearLayout>
+            android:layout_marginLeft="150dp"
+            android:layout_marginRight="150dp"
+            android:layout_marginTop="250dp"
+            android:text="Logout"
+            android:textSize="10sp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
     </LinearLayout>
+
 </LinearLayout>
