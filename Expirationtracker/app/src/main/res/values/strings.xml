@@ -25,4 +25,11 @@
     <string name="on_create_view">OnCreateView() is triggered</string>
 
 
+    <!--    for setting-->
+    <string name="account_setting">Account Setting</string>
+    <string name="name">Name</string>
+    <string name="user_name">Username</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
 </resources>
