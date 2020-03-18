@@ -5,18 +5,21 @@ public class Item {
     private String mExpirationDate;
     private int mQuantity;
     private String mDescription;
+    private long mEventId;
 
     public Item(){
         mName = "";
         mExpirationDate = "";
         mQuantity = 0;
         mDescription = "";
+        mEventId = 0;
     }
-    public Item(String name, String expirationDate, int quantity, String description) {
+    public Item(String name, String expirationDate, int quantity, String description, long eventId) {
         mName = name;
         mExpirationDate = expirationDate;
         mQuantity = quantity;
         mDescription = description;
+        mEventId = eventId;
     }
 
 
@@ -50,6 +53,13 @@ public class Item {
 
     public void setDescription(String description) {
         mDescription = description;
+    }
+    public long getEventId() {
+        return mEventId;
+    }
+
+    public void setEventId(long eventId) {
+        mEventId = eventId;
     }
 
 }

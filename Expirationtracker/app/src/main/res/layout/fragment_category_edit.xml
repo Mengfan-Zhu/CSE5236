@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:text="Frequency" />
+                android:text="When to begin notification" />
 
             <Spinner
                 android:id="@+id/notification_setting"
@@ -108,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:text="Notification Setting" />
+                android:text="Frequency" />
 
             <RadioGroup
                 android:id="@+id/frequency"
@@ -123,7 +123,12 @@
                     android:text="everyday"
                     android:textSize="10sp"
                     android:checked="true"/>
-
+                <RadioButton
+                    android:id="@+id/btn_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 days"
+                    android:textSize="10sp"/>
                 <RadioButton
                     android:id="@+id/btn_2"
                     android:layout_width="wrap_content"
@@ -143,12 +148,7 @@
                     android:layout_height="wrap_content"
                     android:text="2 weeks"
                     android:textSize="10sp"/>
-                <RadioButton
-                    android:id="@+id/btn_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1 month"
-                    android:textSize="10sp"/>
+
             </RadioGroup>
         </LinearLayout>
 
