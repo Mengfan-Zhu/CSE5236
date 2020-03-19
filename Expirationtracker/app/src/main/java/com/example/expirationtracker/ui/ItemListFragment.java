@@ -2,11 +2,16 @@ package com.example.expirationtracker.ui;
 
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -119,6 +124,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                             intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
                             intent.putExtra("itemDescription",item.getDescription());
                             intent.putExtra("itemId",itemId);
+                            intent.putExtra("eventId",Long.toString(item.getEventId()));
                             intent.putExtra("categoryId",mCategoryId);
                             intent.putExtra("operation","Edit");
                             startActivity(intent);
@@ -132,6 +138,9 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            ContentResolver cr = mActivity.getContentResolver();
+                            Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
+                            cr.delete(deleteEvent, null, null);
                             mItemReference.child(itemId).removeValue();
                             mItemLayout.removeAllViews();
                         }
