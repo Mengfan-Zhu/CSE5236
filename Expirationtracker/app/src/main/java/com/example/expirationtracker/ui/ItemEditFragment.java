@@ -141,8 +141,8 @@ public class ItemEditFragment extends Fragment {
                             case "1 day before":
                                 start.set(year, month, day-1, hour, minute);
                                 break;
-                            case "2 day before":
-                                start.set(year, month, day-2, hour, minute);
+                            case "3 day before":
+                                start.set(year, month, day-3, hour, minute);
                                 break;
                             case "1 week before":
                                 start.set(year, month, day-7, hour, minute);
@@ -239,6 +239,6 @@ public class ItemEditFragment extends Fragment {
                 }
             });
     }
-    
+
 
 }

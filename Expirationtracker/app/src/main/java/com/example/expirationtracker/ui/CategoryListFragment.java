@@ -1,10 +1,16 @@
 package com.example.expirationtracker.ui;
 
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.util.TypedValue;
+
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.View;
@@ -19,6 +25,7 @@ import android.widget.LinearLayout.LayoutParams;
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
 
+import com.example.expirationtracker.model.Item;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -124,8 +131,23 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             mCategoryReference.child(categoryId).removeValue();
                             DatabaseReference itemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(categoryId);
                             if(itemReference != null){
-                                itemReference.removeValue();
-                            }
+                                itemReference.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
+                                            Item item = currentSnapshot.getValue(Item.class);
+                                            ContentResolver cr = mActivity.getContentResolver();
+                                            Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
+                                            cr.delete(deleteEvent, null, null);
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });                            }
 
                             mCategoryLayout.removeAllViews();
                         }
