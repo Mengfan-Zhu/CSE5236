@@ -1,16 +1,24 @@
 package com.example.expirationtracker.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.example.expirationtracker.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
@@ -24,12 +32,49 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermission();
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        AuthenticationPagerAdapter pagerAdapter = new AuthenticationPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(new LoginFragment());
-        pagerAdapter.addFragment(new RegisterFragment());
-        viewPager.setAdapter(pagerAdapter);
+
+    }
+    public void normalCreate(){
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null) {
+            Intent intent = new Intent(this, CategoryListActivity.class);
+            startActivity(intent);
+        }else{
+            ViewPager viewPager = findViewById(R.id.viewPager);
+            AuthenticationPagerAdapter pagerAdapter = new AuthenticationPagerAdapter(getSupportFragmentManager());
+            pagerAdapter.addFragment(new LoginFragment());
+            pagerAdapter.addFragment(new RegisterFragment());
+            viewPager.setAdapter(pagerAdapter);
+        }
+
+    }
+
+    public void checkPermission(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_CALENDAR);
+            if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_CALENDAR},222);
+            }else{
+                normalCreate();
+            }
+        } else {
+            normalCreate();
+
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults){
+        if(grantResults[0] != 0) {
+            this.finish();
+        }else{
+            normalCreate();
+        }
+
     }
 
     protected void onStart() {
