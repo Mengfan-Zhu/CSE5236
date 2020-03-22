@@ -100,7 +100,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             Toast.makeText(activity.getApplicationContext(), "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
                             // TODO: update UI
-                            Intent intent = new Intent(getActivity(),CategoryListActivity.class);
+                            Intent intent = new Intent(getActivity(),NavActivity.class);
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.

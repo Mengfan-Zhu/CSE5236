@@ -25,8 +25,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -36,7 +39,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  * create an instance of this fragment.
  */
 public class SettingFragment extends Fragment {
-
+    private FirebaseAuth mAuth;
     private Activity mActivity;
     private DatabaseReference mUserReference;
     private View mView;
@@ -66,10 +69,28 @@ public class SettingFragment extends Fragment {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_setting, container, false);
         mActivity = getActivity();
-        final Intent intent = mActivity.getIntent();
+        mAuth = FirebaseAuth.getInstance();
+      //  final Intent intent = mActivity.getIntent();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = user.getUid();
+        mUserReference = FirebaseDatabase.getInstance().getReference("users" + uid);
+        mUserReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                User u = dataSnapshot.getValue(User.class);
+                ((TextView)mView.findViewById(R.id.text_setting_username)).setText(u.getUserName());
+                ((EditText)mView.findViewById(R.id.text_setting_name)).setText(u.getName());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         // save
         mSaveButton = mView.findViewById(R.id.btn_item_save);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -87,12 +108,11 @@ public class SettingFragment extends Fragment {
                             }
                         });
                 //TODO: not sure if it's correct
-                mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(uid);
+
                 User i = new User(mName, mUserName);
                 mUserReference.child(uid).setValue(i);
 
                 Intent newIntent = new Intent(mActivity, SettingActivity.class);
-                newIntent.putExtra("userId", uid);
                 startActivity(newIntent);
             }
         });

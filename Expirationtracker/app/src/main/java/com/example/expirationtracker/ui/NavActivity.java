@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.expirationtracker.R;
+import com.example.expirationtracker.model.Category;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,7 +21,7 @@ public class NavActivity extends AppCompatActivity {
         setContentView(R.layout.activity_nav);
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        //openFragment(HomeFragment.newInstance());
+        openFragment(CategoryListFragment.newInstance());
 
     }
 
@@ -37,6 +38,7 @@ public class NavActivity extends AppCompatActivity {
                     switch (item.getItemId()) {
                         case R.id.navigation_home:
                            // openFragment(HomeFragment.newInstance());
+                            openFragment(CategoryListFragment.newInstance());
                             //TODO: need to create home page
                             return true;
                         case R.id.navigation_category:
@@ -48,8 +50,7 @@ public class NavActivity extends AppCompatActivity {
                         //TODO: do we have to have add button in nav bar?
 
                         case R.id.navigation_setting:
-                            //openFragment(SettingFragment.newInstance());
-                            //TODO: Need to create setting page.
+                            openFragment(SettingFragment.newInstance());
                             return true;
                     }
                     return false;
