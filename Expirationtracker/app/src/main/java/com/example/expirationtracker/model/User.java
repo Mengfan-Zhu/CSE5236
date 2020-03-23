@@ -8,6 +8,10 @@ public class User {
         mUserName = userName;
         mName = name;
     }
+    public User(){
+        mUserName = "";
+        mName = "";
+    }
 
     public String getUserName() {
         return mUserName;

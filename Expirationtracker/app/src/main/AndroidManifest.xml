@@ -19,11 +19,6 @@
         <activity android:name=".ui.ScanActivity"></activity>
         <activity android:name=".ui.SettingActivity">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.NavActivity" />
         <activity android:name=".ui.ItemEditActivity" />
@@ -31,6 +26,11 @@
         <activity android:name=".ui.ItemListActivity" />
         <activity android:name=".ui.CategoryListActivity" />
         <activity android:name=".ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
         </activity>
 

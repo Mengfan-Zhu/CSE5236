@@ -72,10 +72,9 @@ public class SettingFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
       //  final Intent intent = mActivity.getIntent();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        String uid = user.getUid();
-        mUserReference = FirebaseDatabase.getInstance().getReference("users" + uid);
-        mUserReference.addValueEventListener(new ValueEventListener() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getUid());
+        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -92,25 +91,27 @@ public class SettingFragment extends Fragment {
         });
 
         // save
-        mSaveButton = mView.findViewById(R.id.btn_item_save);
+        mSaveButton = mView.findViewById(R.id.btn_setting_save);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mName = ((EditText) mView.findViewById(R.id.text_setting_name)).getText().toString();
                 mUserName = ((TextView) mView.findViewById(R.id.text_setting_username)).getText().toString();
                 mPassword = ((EditText) mView.findViewById(R.id.text_setting_password)).getText().toString();
-                user.updatePassword(mPassword)
+                mAuth.getCurrentUser().updatePassword(mPassword)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "User password updated.");
+                                }else{
+                                    Log.d(TAG, "User password updated fail.");
                                 }
                             }
                         });
                 //TODO: not sure if it's correct
 
                 User i = new User(mName, mUserName);
-                mUserReference.child(uid).setValue(i);
+                mUserReference.setValue(i);
 
                 Intent newIntent = new Intent(mActivity, SettingActivity.class);
                 startActivity(newIntent);

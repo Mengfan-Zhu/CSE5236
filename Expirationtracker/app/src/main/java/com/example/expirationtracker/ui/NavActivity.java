@@ -50,7 +50,7 @@ public class NavActivity extends AppCompatActivity {
                         //TODO: do we have to have add button in nav bar?
 
                         case R.id.navigation_setting:
-                            openFragment(SettingFragment.newInstance());
+//                            openFragment(SettingFragment.newInstance());
                             return true;
                     }
                     return false;
