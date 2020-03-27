@@ -83,7 +83,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                     categoryContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mActivity, ItemListActivity.class);
+                            Intent intent = new Intent(mActivity, NavActivity.class);
+                            intent.putExtra("content", "itemList");
                             intent.putExtra("categoryId",categoryId);
                             startActivity(intent);
                         }
@@ -110,7 +111,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mActivity, CategoryEditActivity.class);
+                            Intent intent = new Intent(mActivity, NavActivity.class);
+                            intent.putExtra("content", "categoryEdit");
                             intent.putExtra("categoryName",category.getName());
                             intent.putExtra("categoryFrequency",category.getFrequency());
                             intent.putExtra("categoryTime",category.getTime());
@@ -201,7 +203,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_add_category:
-                Intent intent = new Intent(mActivity, CategoryEditActivity.class);
+                Intent intent = new Intent(mActivity, NavActivity.class);
+                intent.putExtra("content", "categoryEdit");
                 intent.putExtra("operation","Add");
                 startActivity(intent);
                 break;

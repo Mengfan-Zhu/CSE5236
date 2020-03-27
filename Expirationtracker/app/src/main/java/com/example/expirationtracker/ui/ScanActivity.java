@@ -33,7 +33,7 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test);
+        setContentView(R.layout.activity_scan);
         Intent itemIntent = this.getIntent();
         mCategoryId = itemIntent.getStringExtra("categoryId");
         mResult = this.findViewById(R.id.scan_result);

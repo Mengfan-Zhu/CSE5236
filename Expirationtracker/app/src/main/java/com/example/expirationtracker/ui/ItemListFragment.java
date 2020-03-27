@@ -48,7 +48,9 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         // Required empty public constructor
     }
 
-
+    public static ItemListFragment newInstance() {
+        return new ItemListFragment();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,7 +120,8 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mActivity, ItemEditActivity.class);
+                            Intent intent = new Intent(mActivity, NavActivity.class);
+                            intent.putExtra("content", "itemEdit");
                             intent.putExtra("itemName",item.getName());
                             intent.putExtra("itemExpirationDate",item.getExpirationDate());
                             intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
@@ -168,7 +171,8 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_item:
-                Intent addIntent = new Intent(mActivity, ItemEditActivity.class);
+                Intent addIntent = new Intent(mActivity, NavActivity.class);
+                addIntent.putExtra("content", "itemEdit");
                 addIntent.putExtra("operation", "Add");
                 addIntent.putExtra("categoryId",mCategoryId);
                 startActivity(addIntent);
