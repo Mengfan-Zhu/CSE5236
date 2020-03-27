@@ -59,6 +59,16 @@ public class ItemEditFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment ItemEditFragment.
+     */
+    public static ItemEditFragment newInstance() {
+        return new ItemEditFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -110,7 +120,8 @@ public class ItemEditFragment extends Fragment {
                 } else {
                     addReminder("Add");
                 }
-                Intent newIntent = new Intent(mActivity, ItemListActivity.class);
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                newIntent.putExtra("content", "itemList");
                 newIntent.putExtra("categoryId", mCategoryId);
                 startActivity(newIntent);
             }

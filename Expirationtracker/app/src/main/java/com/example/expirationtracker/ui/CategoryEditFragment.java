@@ -52,6 +52,15 @@ public class CategoryEditFragment extends Fragment{
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @return A new instance of fragment CategoryEditFragment.
+     */
+    public static CategoryEditFragment newInstance() {
+        return new CategoryEditFragment();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -132,7 +141,8 @@ public class CategoryEditFragment extends Fragment{
                 }else {
                     mCategoryReference.push().setValue(c);
                 }
-                Intent newIntent = new Intent(mActivity, CategoryListActivity.class);
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                newIntent.putExtra("content", "categoryList");
                 startActivity(newIntent);
 
             }
