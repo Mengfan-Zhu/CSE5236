@@ -64,26 +64,26 @@
                 android:textSize="15sp"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item">
+<!--        <LinearLayout-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:contextClickable="true"-->
+<!--            android:background="@drawable/bg_item">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="@string/user_name" />
-            <EditText
-                android:id="@+id/text_setting_username"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:textSize="15sp"/>
-        </LinearLayout>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="15sp"-->
+<!--                android:text="@string/user_name" />-->
+<!--            <EditText-->
+<!--                android:id="@+id/text_setting_username"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:textSize="15sp"/>-->
+<!--        </LinearLayout>-->
 
         <LinearLayout
             android:layout_marginLeft="10dp"

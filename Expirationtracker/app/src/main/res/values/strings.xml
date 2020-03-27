@@ -11,7 +11,7 @@
     <string name="swipe_right_for_login">Swipe Right for Login</string>
     <string name="register">Register</string>
     <string name="re_type_password">Re-type Password</string>
-    <string name="your_name">Full Name</string>
+    <string name="your_name">Name</string>
 
     <!--    for log-->
     <string name="main_act">Main Activity</string>
@@ -31,5 +31,9 @@
     <string name="user_name">Username</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>

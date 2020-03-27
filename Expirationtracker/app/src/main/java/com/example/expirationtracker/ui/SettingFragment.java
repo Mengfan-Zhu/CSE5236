@@ -80,7 +80,7 @@ public class SettingFragment extends Fragment {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 User u = dataSnapshot.getValue(User.class);
-                ((TextView)mView.findViewById(R.id.text_setting_username)).setText(u.getUserName());
+//                ((TextView)mView.findViewById(R.id.text_setting_username)).setText(u.getUserName());
                 ((EditText)mView.findViewById(R.id.text_setting_name)).setText(u.getName());
             }
 
@@ -95,7 +95,7 @@ public class SettingFragment extends Fragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mName = ((EditText) mView.findViewById(R.id.text_setting_name)).getText().toString();
-                mUserName = ((TextView) mView.findViewById(R.id.text_setting_username)).getText().toString();
+//                mUserName = ((TextView) mView.findViewById(R.id.text_setting_username)).getText().toString();
                 mPassword = ((EditText) mView.findViewById(R.id.text_setting_password)).getText().toString();
                 mAuth.getCurrentUser().updatePassword(mPassword)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -109,9 +109,7 @@ public class SettingFragment extends Fragment {
                             }
                         });
                 //TODO: not sure if it's correct
-
-                User i = new User(mName, mUserName);
-                mUserReference.setValue(i);
+                mUserReference.child("name").setValue(mName);
 
                 Intent newIntent = new Intent(mActivity, SettingActivity.class);
                 startActivity(newIntent);

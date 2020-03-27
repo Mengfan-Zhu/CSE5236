@@ -40,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
-            Intent intent = new Intent(this, CategoryListActivity.class);
+//            Intent intent = new Intent(this, CategoryListActivity.class);
+            Intent intent = new Intent(this,NavActivity.class);
             startActivity(intent);
         }else{
             ViewPager viewPager = findViewById(R.id.viewPager);
