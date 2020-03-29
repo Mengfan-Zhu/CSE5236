@@ -101,6 +101,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                                     Toast.LENGTH_SHORT).show();
                             // TODO: update UI
                             Intent intent = new Intent(getActivity(),NavActivity.class);
+                            intent.putExtra("content", "home");
                             startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.

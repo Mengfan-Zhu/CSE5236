@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment {
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mActivity, ItemEditActivity.class);
+                            Intent intent = new Intent(mActivity, NavActivity.class);
                             intent.putExtra("itemName",item.getName());
                             intent.putExtra("itemExpirationDate",item.getExpirationDate());
                             intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
@@ -208,6 +208,7 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("eventId",Long.toString(item.getEventId()));
                             intent.putExtra("categoryId",categoryId);
                             intent.putExtra("operation","Edit");
+                            intent.putExtra("content", "itemList");
                             startActivity(intent);
                         }
                     });
@@ -280,7 +281,7 @@ public class HomeFragment extends Fragment {
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(mActivity, ItemEditActivity.class);
+                            Intent intent = new Intent(mActivity, NavActivity.class);
                             intent.putExtra("itemName",item.getName());
                             intent.putExtra("itemExpirationDate",item.getExpirationDate());
                             intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
@@ -289,6 +290,7 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("eventId",Long.toString(item.getEventId()));
                             intent.putExtra("categoryId",categoryId);
                             intent.putExtra("operation","Edit");
+                            intent.putExtra("content", "itemList");
                             startActivity(intent);
                         }
                     });

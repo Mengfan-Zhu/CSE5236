@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null) {
 //            Intent intent = new Intent(this, CategoryListActivity.class);
             Intent intent = new Intent(this,NavActivity.class);
+            intent.putExtra("content", "home");
             startActivity(intent);
         }else{
             ViewPager viewPager = findViewById(R.id.viewPager);

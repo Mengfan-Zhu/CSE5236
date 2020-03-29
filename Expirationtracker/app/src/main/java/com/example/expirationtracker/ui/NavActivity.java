@@ -26,6 +26,9 @@ public class NavActivity extends AppCompatActivity {
         Intent intent = this.getIntent();
         if (intent != null) {
             switch(intent.getStringExtra("content")){
+                case "home":
+                    openFragment(HomeFragment.newInstance());
+                    break;
                 case "itemList":
                     openFragment(ItemListFragment.newInstance());
                     break;
@@ -38,9 +41,9 @@ public class NavActivity extends AppCompatActivity {
                 case "categoryEdit":
                     openFragment(CategoryEditFragment.newInstance());
                     break;
-                default:
-                    openFragment(HomeFragment.newInstance());
-                    break;
+//                default:
+//                    openFragment(HomeFragment.newInstance());
+//                    break;
             }
 
         }else{
