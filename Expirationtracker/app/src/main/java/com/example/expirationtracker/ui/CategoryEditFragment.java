@@ -178,7 +178,7 @@ public class CategoryEditFragment extends Fragment{
                             case "1 week before":
                                 start.set(year, month, day - 7, hour, minute);
                                 break;
-                            case "2 week before":
+                            case "2 weeks before":
                                 start.set(year, month, day - 14, hour, minute);
                                 break;
                             case "1 month before":

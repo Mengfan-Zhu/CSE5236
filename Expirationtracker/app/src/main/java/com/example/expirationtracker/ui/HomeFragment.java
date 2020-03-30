@@ -125,13 +125,11 @@ public class HomeFragment extends Fragment {
                 Collections.sort(expired, new Comparator<Item>(){
                     @Override
                     public int compare(Item i1, Item i2) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                         int diff = 0;
-                        try {
-                            diff = (int) (sdf.parse(i1.getExpirationDate()).getTime() - sdf.parse(i2.getExpirationDate()).getTime());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        diff = (Integer.parseInt(i1.getExpirationDate()) - Integer.parseInt(i2.getExpirationDate()));
+//                            diff = (int) (sdf.parse(i2.getExpirationDate()).getTime() - sdf.parse(i1.getExpirationDate()).getTime());
+
                         return diff;
                     }
                 });
@@ -139,13 +137,15 @@ public class HomeFragment extends Fragment {
                 Collections.sort(nonExpired, new Comparator<Item>(){
                     @Override
                     public int compare(Item i1, Item i2) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-                        int diff = 0;
-                        try {
-                            diff = (int) (sdf.parse(i2.getExpirationDate()).getTime() - sdf.parse(i1.getExpirationDate()).getTime());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                        int diff = (Integer.parseInt(i1.getExpirationDate()) - Integer.parseInt(i2.getExpirationDate()));
+
+//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+//                        int diff = 0;
+//                        try {
+//                            diff = (int) (sdf.parse(i1.getExpirationDate()).getTime() - sdf.parse(i2.getExpirationDate()).getTime());
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
                         return diff;
                     }
                 });
@@ -208,7 +208,7 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("eventId",Long.toString(item.getEventId()));
                             intent.putExtra("categoryId",categoryId);
                             intent.putExtra("operation","Edit");
-                            intent.putExtra("content", "itemList");
+                            intent.putExtra("content", "itemEditFromHome");
                             startActivity(intent);
                         }
                     });
@@ -290,7 +290,7 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("eventId",Long.toString(item.getEventId()));
                             intent.putExtra("categoryId",categoryId);
                             intent.putExtra("operation","Edit");
-                            intent.putExtra("content", "itemList");
+                            intent.putExtra("content", "itemEditFromHome");
                             startActivity(intent);
                         }
                     });

@@ -70,9 +70,10 @@ public class ScanActivity extends AppCompatActivity {
             intent.putExtra("categoryId", mCategoryId);
             startActivity(intent);
         }else{
-            Intent intent = new Intent(ScanActivity.this, ItemEditActivity.class);
+            Intent intent = new Intent(ScanActivity.this, NavActivity.class);
             intent.putExtra("operation", "Add");
             intent.putExtra("categoryId",mCategoryId);
+            intent.putExtra("content", "itemEdit");
             startActivity(intent);        }
 
     }
@@ -92,16 +93,18 @@ public class ScanActivity extends AppCompatActivity {
                             Matcher m = r.matcher(msg);
                             if (m.find( )) {
                                 msg =  m.group(3);
-                                Intent intent = new Intent(ScanActivity.this, ItemEditActivity.class);
+                                Intent intent = new Intent(ScanActivity.this, NavActivity.class);
                                 intent.putExtra("operation", "Scan");
                                 intent.putExtra("categoryId",mCategoryId);
                                 intent.putExtra("itemName",msg);
+                                intent.putExtra("content", "itemEdit");
                                 startActivity(intent);
                             } else {
                                 mResult.setText("Can't find item, please input the item name");
-                                Intent intent = new Intent(ScanActivity.this, ItemEditActivity.class);
+                                Intent intent = new Intent(ScanActivity.this, NavActivity.class);
                                 intent.putExtra("operation", "Add");
                                 intent.putExtra("categoryId",mCategoryId);
+                                intent.putExtra("content", "itemEdit");
                                 startActivity(intent);
                             }
 

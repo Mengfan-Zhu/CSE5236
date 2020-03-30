@@ -2,6 +2,7 @@
 package com.example.expirationtracker.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,10 +18,13 @@ import android.view.MenuItem;
 
 public class NavActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigation;
+    String mParent= null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         Intent intent = this.getIntent();
@@ -28,18 +32,31 @@ public class NavActivity extends AppCompatActivity {
             switch(intent.getStringExtra("content")){
                 case "home":
                     openFragment(HomeFragment.newInstance());
+                    mParent = "home";
                     break;
                 case "itemList":
                     openFragment(ItemListFragment.newInstance());
+                    mParent = "categoryList";
                     break;
                 case "categoryList":
                     openFragment(CategoryListFragment.newInstance());
+                    mParent = "home";
                     break;
                 case "itemEdit":
                     openFragment(ItemEditFragment.newInstance());
+                    mParent = "itemList";
+                    break;
+                case "itemEditFromHome":
+                    openFragment(ItemEditFragment.newInstance());
+                    mParent = "home";
                     break;
                 case "categoryEdit":
                     openFragment(CategoryEditFragment.newInstance());
+                    mParent = "categoryList";
+                    break;
+                case "setting":
+                    openFragment(SettingFragment.newInstance());
+                    mParent = "home";
                     break;
 //                default:
 //                    openFragment(HomeFragment.newInstance());
@@ -52,6 +69,26 @@ public class NavActivity extends AppCompatActivity {
 
 
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if(mParent == "home") {
+                    openFragment(HomeFragment.newInstance());
+                }else if(mParent == "categoryList"){
+                    openFragment(CategoryListFragment.newInstance());
+                    mParent = "home";
+                }else if(mParent == "itemList"){
+                    openFragment(ItemListFragment.newInstance());
+                    mParent = "categoryList";
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -66,9 +103,11 @@ public class NavActivity extends AppCompatActivity {
                     switch (item.getItemId()) {
                         case R.id.navigation_home:
                             openFragment(HomeFragment.newInstance());
+                            mParent = "home";
                             return true;
                         case R.id.navigation_category:
                             openFragment(CategoryListFragment.newInstance());
+                            mParent = "home";
                             return true;
                      //   case R.id.navigation_add:
                        //     openFragment(AddFragment.newInstance("", ""));
@@ -77,6 +116,7 @@ public class NavActivity extends AppCompatActivity {
 
                         case R.id.navigation_setting:
                             openFragment(SettingFragment.newInstance());
+                            mParent = "home";
                             return true;
                     }
                     return false;

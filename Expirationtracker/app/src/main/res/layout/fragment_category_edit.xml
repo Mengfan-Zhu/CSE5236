@@ -124,26 +124,26 @@
                     android:textSize="10sp"
                     android:checked="true"/>
                 <RadioButton
-                    android:id="@+id/btn_5"
+                    android:id="@+id/btn_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2 days"
                     android:textSize="10sp"/>
                 <RadioButton
-                    android:id="@+id/btn_2"
+                    android:id="@+id/btn_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3 days"
                     android:textSize="10sp"/>
 
                 <RadioButton
-                    android:id="@+id/btn_3"
+                    android:id="@+id/btn_4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1 week"
                     android:textSize="10sp"/>
                 <RadioButton
-                    android:id="@+id/btn_4"
+                    android:id="@+id/btn_5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2 weeks"

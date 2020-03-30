@@ -111,7 +111,9 @@ public class SettingFragment extends Fragment {
                 //TODO: not sure if it's correct
                 mUserReference.child("name").setValue(mName);
 
-                Intent newIntent = new Intent(mActivity, SettingActivity.class);
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                newIntent.putExtra("content", "setting");
+
                 startActivity(newIntent);
             }
         });

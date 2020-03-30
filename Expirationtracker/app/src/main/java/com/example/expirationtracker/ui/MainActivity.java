@@ -1,6 +1,7 @@
 package com.example.expirationtracker.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -10,6 +11,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -31,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
         Log.i(getString(R.string.main_act), getString(R.string.on_create));
 
         super.onCreate(savedInstanceState);
+
+        ActionBar actionBar = this.getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_main);
         checkPermission();
 
@@ -40,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
-//            Intent intent = new Intent(this, CategoryListActivity.class);
             Intent intent = new Intent(this,NavActivity.class);
             intent.putExtra("content", "home");
             startActivity(intent);
