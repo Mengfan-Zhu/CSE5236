@@ -58,6 +58,15 @@ public class NavActivity extends AppCompatActivity {
                     openFragment(SettingFragment.newInstance());
                     mParent = "home";
                     break;
+                case "nameSetting":
+                    openFragment(NameSettingFragment.newInstance());
+                    mParent = "setting";
+                    break;
+                case "passwordSetting":
+                    openFragment(PasswordSettingFragment.newInstance());
+                    mParent = "setting";
+                    break;
+
 //                default:
 //                    openFragment(HomeFragment.newInstance());
 //                    break;
@@ -81,6 +90,9 @@ public class NavActivity extends AppCompatActivity {
                 }else if(mParent == "itemList"){
                     openFragment(ItemListFragment.newInstance());
                     mParent = "categoryList";
+                }else if(mParent == "setting"){
+                    openFragment(SettingFragment.newInstance());
+                    mParent = "home";
                 }
                 break;
             default:
