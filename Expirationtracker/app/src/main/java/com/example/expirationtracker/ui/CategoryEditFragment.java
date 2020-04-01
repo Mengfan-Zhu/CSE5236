@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
@@ -42,7 +43,6 @@ public class CategoryEditFragment extends Fragment{
     private DatabaseReference mCategoryReference;
     private View mView;
     private Button mSaveButton;
-    private Button mCancelButton;
     private String mName;
     private String mBegin;
     private String mFrequency;
@@ -122,42 +122,39 @@ public class CategoryEditFragment extends Fragment{
         mSaveButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 mName = ((EditText)mView.findViewById(R.id.text_category_name)).getText().toString();
-                mBegin = ((Spinner)mView.findViewById(R.id.notification_setting)).getSelectedItem().toString();
-                int selectedId = ((RadioGroup)mView.findViewById(R.id.frequency)).getCheckedRadioButtonId();
-                mFrequency = ((RadioButton)mView.findViewById(selectedId)).getText().toString();
-                mHourRemindingTime =Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentHour());
-                mMinuteRemindingTime = Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentMinute());
-                if (mHourRemindingTime.length() == 1){
-                    mHourRemindingTime = "0" + mHourRemindingTime;
-                }
-                if (mMinuteRemindingTime.length() == 1){
-                    mMinuteRemindingTime = "0" + mMinuteRemindingTime;
-                }
-                mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
-                Category c = new Category(mName, mBegin, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
-                if((intent.getStringExtra("operation")).equals("Edit")){
-                    mCategoryId = intent.getStringExtra("categoryId");
-                    mCategoryReference.child(mCategoryId).setValue(c);
-                    updateReminder();
-                }else {
-                    mCategoryReference.push().setValue(c);
-                }
-                Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "categoryList");
-                startActivity(newIntent);
+                if(mName.length() == 0){
+                    Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
+                            Toast.LENGTH_SHORT).show();
+                    ((EditText)mView.findViewById(R.id.text_category_name)).setText("");
+                }else{
+                    mBegin = ((Spinner)mView.findViewById(R.id.notification_setting)).getSelectedItem().toString();
+                    int selectedId = ((RadioGroup)mView.findViewById(R.id.frequency)).getCheckedRadioButtonId();
+                    mFrequency = ((RadioButton)mView.findViewById(selectedId)).getText().toString();
+                    mHourRemindingTime =Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentHour());
+                    mMinuteRemindingTime = Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentMinute());
+                    if (mHourRemindingTime.length() == 1){
+                        mHourRemindingTime = "0" + mHourRemindingTime;
+                    }
+                    if (mMinuteRemindingTime.length() == 1){
+                        mMinuteRemindingTime = "0" + mMinuteRemindingTime;
+                    }
+                    mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
+                    Category c = new Category(mName, mBegin, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
+                    if((intent.getStringExtra("operation")).equals("Edit")){
+                        mCategoryId = intent.getStringExtra("categoryId");
+                        mCategoryReference.child(mCategoryId).setValue(c);
+                        updateReminder();
+                    }else {
+                        mCategoryReference.push().setValue(c);
+                    }
 
+                    Intent newIntent = new Intent(mActivity, NavActivity.class);
+                    newIntent.putExtra("content", "categoryList");
+                    startActivity(newIntent);
+                }
             }
         });
 
-        mCancelButton = mView.findViewById(R.id.btn_cancel);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "categoryList");
-                startActivity(newIntent);
-            }
-        });
         return mView;
     }
 

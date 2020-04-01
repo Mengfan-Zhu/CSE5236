@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
@@ -48,7 +49,6 @@ public class ItemEditFragment extends Fragment {
     private String mCategoryId;
     private String mItemId;
     private Button mSaveButton;
-    private Button mCancelButton;
     private String mName;
     private String mQuantity;
     private String mDescription;
@@ -96,35 +96,42 @@ public class ItemEditFragment extends Fragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mName = ((EditText) mView.findViewById(R.id.text_item_name)).getText().toString();
-                int day = ((DatePicker) mView.findViewById(R.id.date_picker)).getDayOfMonth();
-                int month = ((DatePicker) mView.findViewById(R.id.date_picker)).getMonth() + 1;
-                int year = ((DatePicker) mView.findViewById(R.id.date_picker)).getYear();
-                mDate = "" + year;
-                if (month < 10) {
-                    mDate = mDate + "0" + month;
-                } else {
-                    mDate = mDate + month;
+                if(mName.length() == 0){
+                    Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
+                            Toast.LENGTH_SHORT).show();
+                    ((EditText) mView.findViewById(R.id.text_item_name)).setText("");
+                }else{
+                    int day = ((DatePicker) mView.findViewById(R.id.date_picker)).getDayOfMonth();
+                    int month = ((DatePicker) mView.findViewById(R.id.date_picker)).getMonth() + 1;
+                    int year = ((DatePicker) mView.findViewById(R.id.date_picker)).getYear();
+                    mDate = "" + year;
+                    if (month < 10) {
+                        mDate = mDate + "0" + month;
+                    } else {
+                        mDate = mDate + month;
+                    }
+                    if (day < 10) {
+                        mDate = mDate + "0" + day;
+                    } else {
+                        mDate = mDate + day;
+                    }
+                    mQuantity = ((TextView) mView.findViewById(R.id.quantity)).getText().toString();
+                    mDescription = ((EditText) mView.findViewById(R.id.description)).getText().toString();
+                    mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
+                    if ((intent.getStringExtra("operation")).equals("Edit")) {
+                        mItemId = intent.getStringExtra("itemId");
+                        mEventId = Long. parseLong(intent.getStringExtra("eventId"));
+                        mItemReference.child(mItemId).setValue(new Item(mName, mDate, Integer.parseInt(mQuantity), mDescription, mEventId));
+                        addReminder("Edit");
+                    } else {
+                        addReminder("Add");
+                    }
+                    Intent newIntent = new Intent(mActivity, NavActivity.class);
+                    newIntent.putExtra("content", "itemList");
+                    newIntent.putExtra("categoryId", mCategoryId);
+                    startActivity(newIntent);
                 }
-                if (day < 10) {
-                    mDate = mDate + "0" + day;
-                } else {
-                    mDate = mDate + day;
-                }
-                mQuantity = ((TextView) mView.findViewById(R.id.quantity)).getText().toString();
-                mDescription = ((EditText) mView.findViewById(R.id.description)).getText().toString();
-                mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-                if ((intent.getStringExtra("operation")).equals("Edit")) {
-                    mItemId = intent.getStringExtra("itemId");
-                    mEventId = Long. parseLong(intent.getStringExtra("eventId"));
-                    mItemReference.child(mItemId).setValue(new Item(mName, mDate, Integer.parseInt(mQuantity), mDescription, mEventId));
-                    addReminder("Edit");
-                } else {
-                    addReminder("Add");
-                }
-                Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "itemList");
-                newIntent.putExtra("categoryId", mCategoryId);
-                startActivity(newIntent);
+
             }
         });
 

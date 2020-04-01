@@ -90,12 +90,15 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                     itemContent.setDividerPadding(10);
                     itemContent.setBackgroundResource(R.drawable.bg_item);
                     itemContent.setClickable(true);
+                    /*
                     itemContent.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             //TODO
                         }
                     });
+
+                     */
                     // TextView for name
                     TextView name = new TextView(mActivity);
                     name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));

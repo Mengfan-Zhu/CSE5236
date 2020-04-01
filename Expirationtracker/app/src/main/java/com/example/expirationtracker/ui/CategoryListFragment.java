@@ -54,7 +54,6 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
      * this fragment using the provided parameters.
      * @return A new instance of fragment CategoryListFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CategoryListFragment newInstance() {
         return new CategoryListFragment();
     }
@@ -196,10 +195,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         if (addButton != null) {
             addButton.setOnClickListener(this);
         }
-        Button logoutButton = mView.findViewById(R.id.btn_logout);
-        if (logoutButton != null) {
-            logoutButton.setOnClickListener(this);
-        }
+
         return mView;
     }
 
@@ -212,11 +208,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 intent.putExtra("operation","Add");
                 startActivity(intent);
                 break;
-            case R.id.btn_logout:
-                mAuth.signOut();
-                Intent logoutIntent = new Intent(mActivity, MainActivity.class);
-                startActivity(logoutIntent);
-                break;
+
 
         }
     }

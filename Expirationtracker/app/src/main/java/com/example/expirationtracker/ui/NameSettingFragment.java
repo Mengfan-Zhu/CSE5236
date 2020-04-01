@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.User;
@@ -38,7 +39,7 @@ public class NameSettingFragment extends Fragment {
     private View mView;
     private String mName;
     private Button mSaveButton;
-    private Button mCancelButton;
+
     public NameSettingFragment() {
         // Required empty public constructor
     }
@@ -49,7 +50,6 @@ public class NameSettingFragment extends Fragment {
      *
      * @return A new instance of fragment NameSettingFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static NameSettingFragment newInstance() {
         return new NameSettingFragment();
     }
@@ -80,21 +80,19 @@ public class NameSettingFragment extends Fragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mName = ((TextView) mView.findViewById(R.id.name_setting_text)).getText().toString();
-                mUserReference.child("name").setValue(mName);
-                Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "setting");
-                startActivity(newIntent);
-            }
-        });
+                mName = ((EditText) mView.findViewById(R.id.name_setting_text)).getText().toString();
+                if(mName.length() == 0){
+                    Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
+                            Toast.LENGTH_SHORT).show();
+                    ((EditText)mView.findViewById(R.id.name_setting_text)).setText("");
+                }else{
+                    mUserReference.child("name").setValue(mName);
+                    Intent newIntent = new Intent(mActivity, NavActivity.class);
+                    newIntent.putExtra("content", "setting");
+                    startActivity(newIntent);
+                }
 
-        mCancelButton = mView.findViewById(R.id.btn_name_setting_cancel);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "setting");
-                startActivity(newIntent);
+
             }
         });
 

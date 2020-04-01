@@ -33,8 +33,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PasswordSettingFragment#newInstance} factory method to
@@ -50,7 +48,6 @@ public class PasswordSettingFragment extends Fragment {
     private String mNewPassword;
     private String mConfirmPassword;
     private Button mSaveButton;
-    private Button mCancelButton;
     public PasswordSettingFragment() {
         // Required empty public constructor
     }
@@ -140,17 +137,6 @@ public class PasswordSettingFragment extends Fragment {
             }
         });
 
-
-
-        mCancelButton = mView.findViewById(R.id.btn_password_setting_cancel);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "setting");
-                startActivity(newIntent);
-            }
-        });
 
         // Inflate the layout for this fragment
         return mView;
