@@ -101,8 +101,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(activity.getApplicationContext(), "Authentication success.",
                                     Toast.LENGTH_SHORT).show();
-
-                            // TODO: update UI
                             Intent intent = new Intent(getActivity(),NavActivity.class);
                             intent.putExtra("content", "home");
                             startActivity(intent);
@@ -111,7 +109,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(activity.getApplicationContext(), "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            // TODO: update UI
                         }
 
                     }

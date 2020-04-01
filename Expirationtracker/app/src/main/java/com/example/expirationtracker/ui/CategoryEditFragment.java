@@ -42,6 +42,7 @@ public class CategoryEditFragment extends Fragment{
     private DatabaseReference mCategoryReference;
     private View mView;
     private Button mSaveButton;
+    private Button mCancelButton;
     private String mName;
     private String mBegin;
     private String mFrequency;
@@ -145,6 +146,16 @@ public class CategoryEditFragment extends Fragment{
                 newIntent.putExtra("content", "categoryList");
                 startActivity(newIntent);
 
+            }
+        });
+
+        mCancelButton = mView.findViewById(R.id.btn_cancel);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                newIntent.putExtra("content", "categoryList");
+                startActivity(newIntent);
             }
         });
         return mView;

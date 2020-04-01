@@ -3,6 +3,7 @@ package com.example.expirationtracker.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -113,7 +114,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                                             Toast.LENGTH_SHORT).show();
                                     mDatabase = FirebaseDatabase.getInstance().getReference();
                                     mDatabase.child("users").child(mAuth.getUid()).setValue(newUser);
-                                    // TODO: update UI
+                                    Intent intent = new Intent(getActivity(),NavActivity.class);
+                                    intent.putExtra("content", "home");
+                                    startActivity(intent);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -121,7 +124,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                                             Toast.LENGTH_SHORT).show();
                                      mEtPassword.setText("");
                                      mEtConfirm.setText("");
-                                    // TODO: update UI
                                 }
                             }
                         });

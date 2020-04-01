@@ -48,6 +48,7 @@ public class ItemEditFragment extends Fragment {
     private String mCategoryId;
     private String mItemId;
     private Button mSaveButton;
+    private Button mCancelButton;
     private String mName;
     private String mQuantity;
     private String mDescription;
@@ -126,6 +127,7 @@ public class ItemEditFragment extends Fragment {
                 startActivity(newIntent);
             }
         });
+
         return mView;
     }
 
