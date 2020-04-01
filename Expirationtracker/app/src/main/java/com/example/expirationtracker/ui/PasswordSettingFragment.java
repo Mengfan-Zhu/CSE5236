@@ -45,6 +45,7 @@ public class PasswordSettingFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mUserReference;
     private View mView;
+    private User mUser;
     private String mOldPassword;
     private String mNewPassword;
     private String mConfirmPassword;
@@ -78,16 +79,16 @@ public class PasswordSettingFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                User u = dataSnapshot.getValue(User.class);
+                mUser = dataSnapshot.getValue(User.class);
                 mSaveButton = mView.findViewById(R.id.btn_password_setting_save);
                 mSaveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOldPassword = ((EditText) mView.findViewById(R.id.new_password)).getText().toString();
-                        mNewPassword = ((EditText) mView.findViewById(R.id.old_password)).getText().toString();
+                        mOldPassword = ((EditText) mView.findViewById(R.id.old_password)).getText().toString();
+                        mNewPassword = ((EditText) mView.findViewById(R.id.new_password)).getText().toString();
                         mConfirmPassword = ((EditText) mView.findViewById(R.id.confirm)).getText().toString();
-                        AuthCredential credential = EmailAuthProvider.getCredential(u.getUserName(), mOldPassword);
-                        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        AuthCredential credential = EmailAuthProvider.getCredential(mUser.getUserName(), mOldPassword);
+                        mAuth.getCurrentUser().reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
