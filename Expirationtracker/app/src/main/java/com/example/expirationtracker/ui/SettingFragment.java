@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Item;
 import com.example.expirationtracker.model.User;
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
