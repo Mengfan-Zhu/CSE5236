@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.expirationtracker.R;
@@ -43,10 +44,10 @@ public class SettingFragment extends Fragment {
     private Activity mActivity;
     private DatabaseReference mUserReference;
     private View mView;
-    private String mName;
-    private String mUserName;
-    private String mPassword;
-    private Button mSaveButton;
+    private LinearLayout mName;
+    private LinearLayout mPassword;
+    private Button mLogout;
+
 
     public SettingFragment() {
         // Required empty public constructor
@@ -68,9 +69,7 @@ public class SettingFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_setting, container, false);
         mActivity = getActivity();
         mAuth = FirebaseAuth.getInstance();
-      //  final Intent intent = mActivity.getIntent();
-
-        FirebaseUser user = mAuth.getCurrentUser();
+        mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getUid());
         mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -84,6 +83,41 @@ public class SettingFragment extends Fragment {
 
             }
         });
+
+        mName = mView.findViewById(R.id.name_setting);
+        mPassword = mView.findViewById(R.id.password_setting);
+        mLogout = mView.findViewById(R.id.btn_logout);
+        mName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                newIntent.putExtra("content", "nameSetting");
+                startActivity(newIntent);
+            }
+        });
+
+        mPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                newIntent.putExtra("content", "passwordSetting");
+                startActivity(newIntent);
+            }
+        });
+
+        mLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                Intent logoutIntent = new Intent(mActivity, MainActivity.class);
+                startActivity(logoutIntent);
+            }
+        });
+
+
+
 
         return mView;
     }
