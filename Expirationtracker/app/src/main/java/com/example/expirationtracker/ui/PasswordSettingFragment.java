@@ -22,6 +22,9 @@ import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +49,7 @@ public class PasswordSettingFragment extends Fragment {
     private String mNewPassword;
     private String mConfirmPassword;
     private Button mSaveButton;
+    private Button mCancelButton;
     public PasswordSettingFragment() {
         // Required empty public constructor
     }
@@ -64,7 +68,7 @@ public class PasswordSettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_name_setting, container, false);
+        mView = inflater.inflate(R.layout.fragment_password_setting, container, false);
         mActivity = getActivity();
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
@@ -75,54 +79,74 @@ public class PasswordSettingFragment extends Fragment {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 User u = dataSnapshot.getValue(User.class);
-//                ((TextView)mView.findViewById(R.id.text_setting_username)).setText(u.getUserName());
-                ((EditText)mView.findViewById(R.id.name_setting_text)).setText(u.getName());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        mSaveButton = mView.findViewById(R.id.btn_name_setting_save);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOldPassword = ((EditText) mView.findViewById(R.id.new_password)).getText().toString();
-                mNewPassword = ((EditText) mView.findViewById(R.id.old_password)).getText().toString();
-                mConfirmPassword = ((EditText) mView.findViewById(R.id.confirm)).getText().toString();
-                if( mConfirmPassword.equals(mNewPassword) && mNewPassword.length() > 0 && !mOldPassword.equals(mNewPassword)){
-                    mAuth.getCurrentUser().updatePassword(mNewPassword)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(mActivity.getApplicationContext(), "Password update successfully. ",
+                mSaveButton = mView.findViewById(R.id.btn_password_setting_save);
+                mSaveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOldPassword = ((EditText) mView.findViewById(R.id.new_password)).getText().toString();
+                        mNewPassword = ((EditText) mView.findViewById(R.id.old_password)).getText().toString();
+                        mConfirmPassword = ((EditText) mView.findViewById(R.id.confirm)).getText().toString();
+                        AuthCredential credential = EmailAuthProvider.getCredential(u.getUserName(), mOldPassword);
+                        user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    if( mConfirmPassword.equals(mNewPassword) && mNewPassword.length() > 0 && !mOldPassword.equals(mNewPassword)){
+                                        mAuth.getCurrentUser().updatePassword(mNewPassword)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(mActivity.getApplicationContext(), "Password update successfully. ",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                            Intent newIntent = new Intent(mActivity, NavActivity.class);
+                                                            newIntent.putExtra("content", "setting");
+                                                            startActivity(newIntent);
+                                                        }else{
+                                                            Toast.makeText(mActivity.getApplicationContext(), "Password update failed.",
+                                                                    Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                    } else if(mNewPassword.length() == 0){
+                                        Toast.makeText(mActivity.getApplicationContext(), "Password cannot be empty. ",
                                                 Toast.LENGTH_SHORT).show();
-                                    }else{
-                                        Toast.makeText(mActivity.getApplicationContext(), "Password update failed.",
+                                    }else if(!mNewPassword.equals(mConfirmPassword)){
+                                        Toast.makeText(mActivity.getApplicationContext(), "New Password does not match.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }else if(mOldPassword.equals(mNewPassword)){
+                                        Toast.makeText(mActivity.getApplicationContext(), "Password should not be same.",
                                                 Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            });
-                }
-                /*
-                else if(!mOldPassword.equals()){
-                    Toast.makeText(mActivity.getApplicationContext(), "Password does not correct.",
-                            Toast.LENGTH_SHORT).show();
-                } */
-                else if(mNewPassword.length() == 0){
-                    Toast.makeText(mActivity.getApplicationContext(), "Password cannot be empty. ",
-                            Toast.LENGTH_SHORT).show();
-                }else if(!mNewPassword.equals(mConfirmPassword)){
-                    Toast.makeText(mActivity.getApplicationContext(), "New Password does not match.",
-                            Toast.LENGTH_SHORT).show();
-                }else if(mOldPassword.equals(mNewPassword)){
-                    Toast.makeText(mActivity.getApplicationContext(), "Password should not be same.",
-                            Toast.LENGTH_SHORT).show();
-                }
+                                else{
+                                    Toast.makeText(mActivity.getApplicationContext(), "Password update failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        });
+
+                        ((EditText) mView.findViewById(R.id.old_password)).setText("");
+                        ((EditText) mView.findViewById(R.id.new_password)).setText("");
+                        ((EditText) mView.findViewById(R.id.confirm)).setText("");
+                    }
+                });
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+
+
+
+        mCancelButton = mView.findViewById(R.id.btn_password_setting_cancel);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "passwordSetting");
+                newIntent.putExtra("content", "setting");
                 startActivity(newIntent);
             }
         });
