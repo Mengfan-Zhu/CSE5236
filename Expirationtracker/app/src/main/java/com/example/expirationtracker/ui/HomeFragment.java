@@ -87,15 +87,15 @@ public class HomeFragment extends Fragment {
         itemList.addView(mItemLayout);
         ValueEventListener itemListener = new ValueEventListener() {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-            List<Item> nonExpired = new ArrayList<>();
-            List<Item> expired = new ArrayList<>();
-            Map<Item, String[]> expiredId = new HashMap<>();
-            Map<Item, String[]> nonExpiredId = new HashMap<>();
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 mItemLayout.removeAllViews();
-
+                List<Item> nonExpired = new ArrayList<>();
+                List<Item> expired = new ArrayList<>();
+                Map<Item, String[]> expiredId = new HashMap<>();
+                Map<Item, String[]> nonExpiredId = new HashMap<>();
                 for (DataSnapshot currentCategoty : dataSnapshot.getChildren()) {
                     final String categoryId = currentCategoty.getKey();
                     for(DataSnapshot currentSnapshot : currentCategoty.getChildren()){
@@ -167,13 +167,6 @@ public class HomeFragment extends Fragment {
                     itemContent.setDividerPadding(10);
                     itemContent.setBackgroundResource(R.drawable.bg_item);
                     itemContent.setClickable(true);
-                    itemContent.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //TODO
-                        }
-                    });
-
                     // TextView for name
                     TextView name = new TextView(mActivity);
                     name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -223,7 +216,7 @@ public class HomeFragment extends Fragment {
                             ContentResolver cr = mActivity.getContentResolver();
                             Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
                             cr.delete(deleteEvent, null, null);
-                            mItemReference.child(itemId).removeValue();
+                            mItemReference.child(categoryId).child(itemId).removeValue();
                             mItemLayout.removeAllViews();
                         }
                     });
@@ -305,7 +298,7 @@ public class HomeFragment extends Fragment {
                             ContentResolver cr = mActivity.getContentResolver();
                             Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
                             cr.delete(deleteEvent, null, null);
-                            mItemReference.child(itemId).removeValue();
+                            mItemReference.child(categoryId).child(itemId).removeValue();
                             mItemLayout.removeAllViews();
                         }
                     });
