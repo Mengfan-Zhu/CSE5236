@@ -152,7 +152,7 @@ public class ItemEditFragment extends Fragment {
                         // get time
                         String[] time = mCategory.getTime().split(":");
                         int hour = Integer.parseInt(time[0]);
-                        int minute = Integer.parseInt(time[1])+10;
+                        int minute = Integer.parseInt(time[1]);
                         // set calendar id
                         long calendar_id = 1;
                         // set up time
@@ -230,7 +230,7 @@ public class ItemEditFragment extends Fragment {
                             mEventId = Long.parseLong(newEvent.getLastPathSegment());
                             ContentValues reminder = new ContentValues();
                             reminder.put(CalendarContract.Reminders.EVENT_ID, mEventId);
-                            reminder.put(CalendarContract.Reminders.MINUTES, 10);
+                            reminder.put(CalendarContract.Reminders.MINUTES, 0);
                             reminder.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
                             newReminder = context.insert(CalendarContract.Reminders.CONTENT_URI, reminder);
                             if(newEvent == null || newReminder == null){

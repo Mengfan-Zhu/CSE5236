@@ -45,8 +45,8 @@ public class SettingFragment extends Fragment {
     private Activity mActivity;
     private DatabaseReference mUserReference;
     private View mView;
-    private LinearLayout mName;
-    private LinearLayout mPassword;
+    private Button mName;
+    private Button mPassword;
     private Button mLogout;
 
 
@@ -70,20 +70,20 @@ public class SettingFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_setting, container, false);
         mActivity = getActivity();
         mAuth = FirebaseAuth.getInstance();
-        mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getUid());
-        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                User u = dataSnapshot.getValue(User.class);
-                ((TextView) mView.findViewById((R.id.text_setting_name))).setText(u.getName());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+//        mUserReference = FirebaseDatabase.getInstance().getReference().child("users").child(mAuth.getUid());
+//        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                User u = dataSnapshot.getValue(User.class);
+////                ((TextView) mView.findViewById((R.id.text_setting_name))).setText(u.getName());
+//            }
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
         mName = mView.findViewById(R.id.name_setting);
         mPassword = mView.findViewById(R.id.password_setting);

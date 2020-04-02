@@ -10,44 +10,44 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:gravity="center"
-            android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
             android:textSize="25sp"
             android:text="@string/account_setting" />
-
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item"
-            android:id="@+id/name_setting">
+<!--        <LinearLayout-->
+<!--            android:layout_marginLeft="10dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:contextClickable="true"-->
+<!--            android:background="@drawable/bg_item"-->
+<!--            android:id="@+id/name_setting">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:text="@string/your_name" />
-            <TextView
-                android:id="@+id/text_setting_name"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:textSize="15sp"/>
-        </LinearLayout>
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="15sp"-->
+<!--                android:text="@string/your_name" />-->
+<!--            <TextView-->
+<!--                android:id="@+id/text_setting_name"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:textSize="15sp"/>-->
+<!--        </LinearLayout>-->
+
 
 <!--        <LinearLayout-->
 <!--            android:layout_marginLeft="10dp"-->
@@ -56,59 +56,49 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:orientation="vertical"-->
 <!--            android:contextClickable="true"-->
-<!--            android:background="@drawable/bg_item">-->
+<!--            android:background="@drawable/bg_item"-->
+<!--            android:id="@+id/password_setting">-->
 
 <!--            <TextView-->
 <!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_height="60sp"-->
 <!--                android:textSize="15sp"-->
-<!--                android:text="@string/user_name" />-->
-<!--            <EditText-->
-<!--                android:id="@+id/text_setting_username"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:textSize="15sp"/>-->
+<!--                android:text="@string/password" />-->
+
 <!--        </LinearLayout>-->
-
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+<!--        -->
+        <Button
+            android:id="@+id/name_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item"
-            android:id="@+id/password_setting">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="60sp"
-                android:textSize="15sp"
-                android:text="@string/password" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="Change name"
+            android:textSize="15sp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
+        <Button
+            android:id="@+id/password_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:contextClickable="true"
-            android:background="@drawable/bg_item">
-        </LinearLayout>
-
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="Change password"
+            android:textSize="15sp"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
         <Button
             android:id="@+id/btn_logout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="150dp"
-            android:layout_marginRight="150dp"
-            android:layout_marginTop="250dp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="10dp"
             android:text="Logout"
-            android:textSize="10sp"
+            android:textSize="15sp"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp" />
     </LinearLayout>
+<!--    android:layout_marginLeft="100dp"-->
+<!--    android:layout_marginRight="100dp"-->
 
 </LinearLayout>
