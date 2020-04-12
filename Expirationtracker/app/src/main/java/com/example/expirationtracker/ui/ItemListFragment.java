@@ -51,6 +51,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
     public static ItemListFragment newInstance() {
         return new ItemListFragment();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +66,14 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         }
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
         Query itemQuery = mItemReference.orderByChild("name");
+        showItemList(itemQuery);
+        Button addButton = mView.findViewById(R.id.btn_add_item);
+        Button scanButton = mView.findViewById(R.id.btn_scan_item);
+        addButton.setOnClickListener(this);
+        scanButton.setOnClickListener(this);
+        return mView;
+    }
+    public void showItemList(Query itemQuery){
         ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
         itemList.setFillViewport(true);
         mItemLayout = new LinearLayout(mActivity);
@@ -74,102 +83,96 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         ValueEventListener itemListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // add wrap layout
+                // clear previous view
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mItemLayout.removeAllViews();
+                    }
+                });
                 // add each layout
-                mItemLayout.removeAllViews();
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String itemId = currentSnapshot.getKey();
                     final Item item = currentSnapshot.getValue(Item.class);
-                    // linearLayout for one item content
-                    LinearLayout itemContent = new LinearLayout(mActivity);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins(10, 10, 10, 10);
-                    itemContent.setOrientation(LinearLayout.VERTICAL);
-                    itemContent.setLayoutParams(layoutParams);
-                    itemContent.setDividerPadding(10);
-                    itemContent.setBackgroundResource(R.drawable.bg_item);
-                    itemContent.setClickable(true);
-                    /*
-                    itemContent.setOnClickListener(new View.OnClickListener() {
+                    mActivity.runOnUiThread(new Runnable() {
                         @Override
-                        public void onClick(View v) {
-                            //TODO
+                        public void run() {
+                            // linearLayout for one item content
+                            LinearLayout itemContent = new LinearLayout(mActivity);
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            layoutParams.setMargins(10, 10, 10, 10);
+                            itemContent.setOrientation(LinearLayout.VERTICAL);
+                            itemContent.setLayoutParams(layoutParams);
+                            itemContent.setDividerPadding(10);
+                            itemContent.setBackgroundResource(R.drawable.bg_item);
+                            itemContent.setClickable(true);
+                            // TextView for name
+                            TextView name = new TextView(mActivity);
+                            name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            name.setText(item.getName());
+                            name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                            itemContent.addView(name);
+                            // TextView for contents
+                            TextView contents = new TextView(mActivity);
+                            contents.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            contents.setText("Expiration Date: " + item.getExpirationDate()
+                                    + "\nQuantity: " + item.getQuantity()
+                                    + "\nDescription: " + item.getDescription());
+                            itemContent.addView(contents);
+                            // linearLayout for buttons
+                            LinearLayout buttonsLayout = new LinearLayout(mActivity);
+                            buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
+                            buttonsLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            // edit button
+                            Button editButton = new Button(mActivity);
+                            editButton.setText("Edit");
+                            editButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            editButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(mActivity, NavActivity.class);
+                                    intent.putExtra("content", "itemEdit");
+                                    intent.putExtra("itemName",item.getName());
+                                    intent.putExtra("itemExpirationDate",item.getExpirationDate());
+                                    intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
+                                    intent.putExtra("itemDescription",item.getDescription());
+                                    intent.putExtra("itemId",itemId);
+                                    intent.putExtra("eventId",Long.toString(item.getEventId()));
+                                    intent.putExtra("categoryId",mCategoryId);
+                                    intent.putExtra("operation","Edit");
+                                    startActivity(intent);
+                                }
+                            });
+                            buttonsLayout.addView(editButton);
+                            // delete button
+                            Button deleteButton = new Button(mActivity);
+                            deleteButton.setText("Delete");
+                            deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            deleteButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ContentResolver cr = mActivity.getContentResolver();
+                                    Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
+                                    cr.delete(deleteEvent, null, null);
+                                    mItemReference.child(itemId).removeValue();
+                                    mItemLayout.removeAllViews();
+                                }
+                            });
+                            buttonsLayout.addView(deleteButton);
+                            itemContent.addView(buttonsLayout);
+                            mItemLayout.addView(itemContent);
                         }
                     });
-
-                     */
-                    // TextView for name
-                    TextView name = new TextView(mActivity);
-                    name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    name.setText(item.getName());
-                    name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                    itemContent.addView(name);
-                    // TextView for contents
-                    TextView contents = new TextView(mActivity);
-                    contents.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    contents.setText("Expiration Date: " + item.getExpirationDate()
-                            + "\nQuantity: " + item.getQuantity()
-                            + "\nDescription: " + item.getDescription());
-                    itemContent.addView(contents);
-                    // linearLayout for buttons
-                    LinearLayout buttonsLayout = new LinearLayout(mActivity);
-                    buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-                    buttonsLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    // edit button
-                    Button editButton = new Button(mActivity);
-                    editButton.setText("Edit");
-                    editButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    editButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(mActivity, NavActivity.class);
-                            intent.putExtra("content", "itemEdit");
-                            intent.putExtra("itemName",item.getName());
-                            intent.putExtra("itemExpirationDate",item.getExpirationDate());
-                            intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
-                            intent.putExtra("itemDescription",item.getDescription());
-                            intent.putExtra("itemId",itemId);
-                            intent.putExtra("eventId",Long.toString(item.getEventId()));
-                            intent.putExtra("categoryId",mCategoryId);
-                            intent.putExtra("operation","Edit");
-                            startActivity(intent);
-                        }
-                    });
-                    buttonsLayout.addView(editButton);
-                    // delete button
-                    Button deleteButton = new Button(mActivity);
-                    deleteButton.setText("Delete");
-                    deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    deleteButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ContentResolver cr = mActivity.getContentResolver();
-                            Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
-                            cr.delete(deleteEvent, null, null);
-                            mItemReference.child(itemId).removeValue();
-                            mItemLayout.removeAllViews();
-                        }
-                    });
-                    buttonsLayout.addView(deleteButton);
-                    itemContent.addView(buttonsLayout);
-                    mItemLayout.addView(itemContent);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "FAIL TO UPDATE");
             }
         };
         itemQuery.addValueEventListener(itemListener);
-        Button addButton = mView.findViewById(R.id.btn_add_item);
-        Button scanButton = mView.findViewById(R.id.btn_scan_item);
-        addButton.setOnClickListener(this);
-        scanButton.setOnClickListener(this);
-        return mView;
     }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

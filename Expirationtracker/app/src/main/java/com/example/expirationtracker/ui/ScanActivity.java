@@ -106,7 +106,12 @@ public class ScanActivity extends AppCompatActivity {
                                 intent.putExtra("content", "itemEdit");
                                 startActivity(intent);
                             } else {
-                                mResult.setText("Can't find item, please input the item name");
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mResult.setText("Can't find item, please input the item name");
+                                    }
+                                });
                                 Intent intent = new Intent(ScanActivity.this, NavActivity.class);
                                 intent.putExtra("operation", "Add");
                                 intent.putExtra("categoryId",mCategoryId);
