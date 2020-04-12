@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.expirationtracker.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i(getString(R.string.main_act), getString(R.string.on_create));
 
         super.onCreate(savedInstanceState);
-
         ActionBar actionBar = this.getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_main);

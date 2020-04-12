@@ -6,15 +6,17 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.expirationtracker.R;
-import com.example.expirationtracker.model.Category;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class NavActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigation;
@@ -23,60 +25,66 @@ public class NavActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
-        ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        bottomNavigation = findViewById(R.id.bottom_navigation);
-        bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        Intent intent = this.getIntent();
-        if (intent != null) {
-            switch(intent.getStringExtra("content")){
-                case "home":
-                    openFragment(HomeFragment.newInstance());
-                    mParent = "home";
-                    break;
-                case "itemList":
-                    openFragment(ItemListFragment.newInstance());
-                    mParent = "categoryList";
-                    break;
-                case "categoryList":
-                    openFragment(CategoryListFragment.newInstance());
-                    mParent = "home";
-                    break;
-                case "itemEdit":
-                    openFragment(ItemEditFragment.newInstance());
-                    mParent = "itemList";
-                    break;
-                case "itemEditFromHome":
-                    openFragment(ItemEditFragment.newInstance());
-                    mParent = "home";
-                    break;
-                case "categoryEdit":
-                    openFragment(CategoryEditFragment.newInstance());
-                    mParent = "categoryList";
-                    break;
-                case "setting":
-                    openFragment(SettingFragment.newInstance());
-                    mParent = "home";
-                    break;
-                case "nameSetting":
-                    openFragment(NameSettingFragment.newInstance());
-                    mParent = "setting";
-                    break;
-                case "passwordSetting":
-                    openFragment(PasswordSettingFragment.newInstance());
-                    mParent = "setting";
-                    break;
+
+        if (!AppStatus.getInstance(this).isOnline()) {
+
+            Toast.makeText(this, "Network connection issue",
+                    Toast.LENGTH_SHORT).show();
+        }else {
+            ActionBar actionBar = this.getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            bottomNavigation = findViewById(R.id.bottom_navigation);
+            bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+            Intent intent = this.getIntent();
+            if (intent != null) {
+                switch (intent.getStringExtra("content")) {
+                    case "home":
+                        openFragment(HomeFragment.newInstance());
+                        mParent = "home";
+                        break;
+                    case "itemList":
+                        openFragment(ItemListFragment.newInstance());
+                        mParent = "categoryList";
+                        break;
+                    case "categoryList":
+                        openFragment(CategoryListFragment.newInstance());
+                        mParent = "home";
+                        break;
+                    case "itemEdit":
+                        openFragment(ItemEditFragment.newInstance());
+                        mParent = "itemList";
+                        break;
+                    case "itemEditFromHome":
+                        openFragment(ItemEditFragment.newInstance());
+                        mParent = "home";
+                        break;
+                    case "categoryEdit":
+                        openFragment(CategoryEditFragment.newInstance());
+                        mParent = "categoryList";
+                        break;
+                    case "setting":
+                        openFragment(SettingFragment.newInstance());
+                        mParent = "home";
+                        break;
+                    case "nameSetting":
+                        openFragment(NameSettingFragment.newInstance());
+                        mParent = "setting";
+                        break;
+                    case "passwordSetting":
+                        openFragment(PasswordSettingFragment.newInstance());
+                        mParent = "setting";
+                        break;
 
 //                default:
 //                    openFragment(HomeFragment.newInstance());
 //                    break;
+                }
+
+            } else {
+                openFragment(HomeFragment.newInstance());
             }
 
-        }else{
-            openFragment(HomeFragment.newInstance());
         }
-
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

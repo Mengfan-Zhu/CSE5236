@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.expirationtracker.R;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -34,33 +35,38 @@ public class ScanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        Intent itemIntent = this.getIntent();
-        mCategoryId = itemIntent.getStringExtra("categoryId");
-        mResult = this.findViewById(R.id.scan_result);
-        mResult.setText("Waiting for searching item name");
-        Intent intent = new Intent(this, CaptureActivity.class);
-        // set scan config
-        ZxingConfig config = new ZxingConfig();
-        config.setShowbottomLayout(false);
-        config.setPlayBeep(true);
-        config.setShake(true);
-        config.setShowAlbum(false);
-        config.setShowFlashLight(false);
-        intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
-        //check allow camera
-        if (Build.VERSION.SDK_INT >= 23) {
-            int checkCallPhonePermission = ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.CAMERA);
-            if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CAMERA},222);
-            }else{
+        if (!AppStatus.getInstance(this).isOnline()) {
+
+            Toast.makeText(this, "Network connection issue",
+                    Toast.LENGTH_SHORT).show();
+        }else {
+            Intent itemIntent = this.getIntent();
+            mCategoryId = itemIntent.getStringExtra("categoryId");
+            mResult = this.findViewById(R.id.scan_result);
+            mResult.setText("Waiting for searching item name");
+            Intent intent = new Intent(this, CaptureActivity.class);
+            // set scan config
+            ZxingConfig config = new ZxingConfig();
+            config.setShowbottomLayout(false);
+            config.setPlayBeep(true);
+            config.setShake(true);
+            config.setShowAlbum(false);
+            config.setShowFlashLight(false);
+            intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
+            //check allow camera
+            if (Build.VERSION.SDK_INT >= 23) {
+                int checkCallPhonePermission = ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.CAMERA);
+                if (checkCallPhonePermission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 222);
+                } else {
+                    startActivityForResult(intent, REQUEST_CODE_SCAN);
+                }
+            } else {
                 startActivityForResult(intent, REQUEST_CODE_SCAN);
             }
-        } else {
-            startActivityForResult(intent, REQUEST_CODE_SCAN);
+
         }
-
-
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
