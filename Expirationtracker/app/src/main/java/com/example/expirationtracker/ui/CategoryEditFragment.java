@@ -37,10 +37,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Calendar;
 
 
-public class CategoryEditFragment extends Fragment{
+public class CategoryEditFragment extends Fragment implements View.OnClickListener{
     private Activity mActivity;
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
+    private DatabaseReference mItemReference;
     private View mView;
     private Button mSaveButton;
     private String mName;
@@ -49,6 +50,8 @@ public class CategoryEditFragment extends Fragment{
     private String mHourRemindingTime;
     private String mMinuteRemindingTime;
     private String mCategoryId;
+    private ValueEventListener mItemListener;
+    private String mOperation;
     public CategoryEditFragment() {
         // Required empty public constructor
     }
@@ -69,7 +72,8 @@ public class CategoryEditFragment extends Fragment{
         mAuth = FirebaseAuth.getInstance();
         mActivity = getActivity();
         final Intent intent = getActivity().getIntent();
-
+        mCategoryId = intent.getStringExtra("categoryId");
+        mOperation = intent.getStringExtra("operation");
         if(intent.getStringExtra("operation") != null){
             // edit mode
             if( intent.getStringExtra("operation").equals("Edit")){
@@ -119,49 +123,15 @@ public class CategoryEditFragment extends Fragment{
         }
         // save
         mSaveButton = mView.findViewById(R.id.btn_save);
-        mSaveButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
-                mName = ((EditText)mView.findViewById(R.id.text_category_name)).getText().toString();
-                if(mName.length() == 0){
-                    Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
-                            Toast.LENGTH_SHORT).show();
-                    ((EditText)mView.findViewById(R.id.text_category_name)).setText("");
-                }else{
-                    mBegin = ((Spinner)mView.findViewById(R.id.notification_setting)).getSelectedItem().toString();
-                    int selectedId = ((RadioGroup)mView.findViewById(R.id.frequency)).getCheckedRadioButtonId();
-                    mFrequency = ((RadioButton)mView.findViewById(selectedId)).getText().toString();
-                    mHourRemindingTime =Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentHour());
-                    mMinuteRemindingTime = Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentMinute());
-                    if (mHourRemindingTime.length() == 1){
-                        mHourRemindingTime = "0" + mHourRemindingTime;
-                    }
-                    if (mMinuteRemindingTime.length() == 1){
-                        mMinuteRemindingTime = "0" + mMinuteRemindingTime;
-                    }
-                    mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
-                    Category c = new Category(mName, mBegin, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
-                    if((intent.getStringExtra("operation")).equals("Edit")){
-                        mCategoryId = intent.getStringExtra("categoryId");
-                        mCategoryReference.child(mCategoryId).setValue(c);
-                        updateReminder();
-                    }else {
-                        mCategoryReference.push().setValue(c);
-                    }
-
-                    Intent newIntent = new Intent(mActivity, NavActivity.class);
-                    newIntent.putExtra("content", "categoryList");
-                    startActivity(newIntent);
-                }
-            }
-        });
+        mSaveButton.setOnClickListener(this);
 
         return mView;
     }
 
     public void updateReminder(){
-        DatabaseReference itemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-        if(itemReference != null) {
-            itemReference.addValueEventListener(new ValueEventListener() {
+        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
+        if(mItemReference != null) {
+            mItemListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
@@ -228,14 +198,62 @@ public class CategoryEditFragment extends Fragment{
                         cr.update(updateEvent, event, null, null);
 
                     }
-
+//                    return;
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            };
+            mItemReference.addValueEventListener(mItemListener);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_save:
+                mName = ((EditText)mView.findViewById(R.id.text_category_name)).getText().toString();
+                if(mName.length() == 0){
+                    Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
+                            Toast.LENGTH_SHORT).show();
+                    ((EditText)mView.findViewById(R.id.text_category_name)).setText("");
+                }else{
+                    mBegin = ((Spinner)mView.findViewById(R.id.notification_setting)).getSelectedItem().toString();
+                    int selectedId = ((RadioGroup)mView.findViewById(R.id.frequency)).getCheckedRadioButtonId();
+                    mFrequency = ((RadioButton)mView.findViewById(selectedId)).getText().toString();
+                    mHourRemindingTime =Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentHour());
+                    mMinuteRemindingTime = Integer.toString(((TimePicker) mView.findViewById(R.id.time_picker)).getCurrentMinute());
+                    if (mHourRemindingTime.length() == 1){
+                        mHourRemindingTime = "0" + mHourRemindingTime;
+                    }
+                    if (mMinuteRemindingTime.length() == 1){
+                        mMinuteRemindingTime = "0" + mMinuteRemindingTime;
+                    }
+                    mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
+                    Category c = new Category(mName, mBegin, mFrequency, mHourRemindingTime + ":" +mMinuteRemindingTime);
+                    if(mOperation.equals("Edit")){
+                        mCategoryReference.child(mCategoryId).setValue(c);
+                        updateReminder();
+                    }else {
+                        mCategoryReference.push().setValue(c);
+                    }
+                    Intent newIntent = new Intent(mActivity, NavActivity.class);
+                    newIntent.putExtra("content", "categoryList");
+                    startActivity(newIntent);
+                }
+                break;
+        }
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (mItemListener != null) {
+            mItemReference.removeEventListener(mItemListener);
+            mItemListener = null;
+        }
+        Runtime.getRuntime().gc();
     }
 }

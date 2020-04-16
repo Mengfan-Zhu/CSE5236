@@ -17,7 +17,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.expirationtracker.R;
 import com.google.firebase.auth.FirebaseAuth;

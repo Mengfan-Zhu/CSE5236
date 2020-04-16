@@ -31,12 +31,12 @@ public class ScanActivity extends AppCompatActivity {
     private String msg;
     private String mCategoryId;
     private TextView mResult;
+    private boolean stopThread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         if (!AppStatus.getInstance(this).isOnline()) {
-
             Toast.makeText(this, "Network connection issue",
                     Toast.LENGTH_SHORT).show();
         }else {
@@ -80,8 +80,8 @@ public class ScanActivity extends AppCompatActivity {
             intent.putExtra("operation", "Add");
             intent.putExtra("categoryId",mCategoryId);
             intent.putExtra("content", "itemEdit");
-            startActivity(intent);        }
-
+            startActivity(intent);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -92,37 +92,39 @@ public class ScanActivity extends AppCompatActivity {
                 final String html = "https://www.barcodelookup.com/"+content;
                 new Thread() {
                     public void run() {
-                        try {
-                            msg = getNameFromWeb(html);
-                            String pattern = "(<meta name=\"description\"[^-]*)(- )([^\"]*)";
-                            Pattern r = Pattern.compile(pattern);
-                            Matcher m = r.matcher(msg);
-                            if (m.find( )) {
-                                msg =  m.group(3);
-                                Intent intent = new Intent(ScanActivity.this, NavActivity.class);
-                                intent.putExtra("operation", "Scan");
-                                intent.putExtra("categoryId",mCategoryId);
-                                intent.putExtra("itemName",msg);
-                                intent.putExtra("content", "itemEdit");
-                                startActivity(intent);
-                            } else {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mResult.setText("Can't find item, please input the item name");
-                                    }
-                                });
-                                Intent intent = new Intent(ScanActivity.this, NavActivity.class);
-                                intent.putExtra("operation", "Add");
-                                intent.putExtra("categoryId",mCategoryId);
-                                intent.putExtra("content", "itemEdit");
-                                startActivity(intent);
-                            }
+                        if(!stopThread){
+                            try {
+                                msg = getNameFromWeb(html);
+                                String pattern = "(<meta name=\"description\"[^-]*)(- )([^\"]*)";
+                                Pattern r = Pattern.compile(pattern);
+                                Matcher m = r.matcher(msg);
+                                if (m.find( )) {
+                                    msg =  m.group(3);
+                                    Intent intent = new Intent(ScanActivity.this, NavActivity.class);
+                                    intent.putExtra("operation", "Scan");
+                                    intent.putExtra("categoryId",mCategoryId);
+                                    intent.putExtra("itemName",msg);
+                                    intent.putExtra("content", "itemEdit");
+                                    startActivity(intent);
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            mResult.setText("Can't find item, please input the item name");
+                                        }
+                                    });
+                                    Intent intent = new Intent(ScanActivity.this, NavActivity.class);
+                                    intent.putExtra("operation", "Add");
+                                    intent.putExtra("categoryId",mCategoryId);
+                                    intent.putExtra("content", "itemEdit");
+                                    startActivity(intent);
+                                }
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    };
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        };
+                    }
                 }.start();
             }
         }
@@ -136,7 +138,7 @@ public class ScanActivity extends AppCompatActivity {
         if (conn.getResponseCode() == 200) {
             InputStream in = conn.getInputStream();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[300];
             int len = 0;
             while((len = in.read(buffer)) != -1)
             {
@@ -148,6 +150,10 @@ public class ScanActivity extends AppCompatActivity {
             return html;
         }
         return null;
+    }
+        public void onDestroy() {
+        stopThread=true;
+        super.onDestroy();
     }
 }
 

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.CategoryEditFragment"
+    android:id="@+id/fragment_category_edit"
     android:orientation="vertical">
 
     <LinearLayout

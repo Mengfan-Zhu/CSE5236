@@ -11,7 +11,6 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 
 import android.view.View;
@@ -41,8 +40,12 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     private DatabaseReference mCategoryReference;
     private View mView;
     private ScrollView mCategoryList;
+    private ValueEventListener mCategoryListener;
+    private Query mCategoryQuery;
     private LinearLayout mCategoryLayout;
     private Activity mActivity;
+
+
     String TAG = "Category List Fragment";
 
     public CategoryListFragment() {
@@ -74,19 +77,19 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         mCategoryLayout.setPadding(10,10,10,400);
         mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
         mCategoryList.addView(mCategoryLayout);
-        Query categoryQuery = mCategoryReference.orderByChild("name");
-        showCategoryList(categoryQuery);
         // set up buttons
         Button addButton = mView.findViewById(R.id.btn_add_category);
-        if (addButton != null) {
-            addButton.setOnClickListener(this);
-        }
+        addButton.setOnClickListener(this);
         return mView;
     }
-
-
+    @Override
+    public void onStart(){
+        super.onStart();
+        mCategoryQuery = mCategoryReference.orderByChild("name");
+        showCategoryList(mCategoryQuery);
+    }
     public void showCategoryList(Query categoryQuery){
-        ValueEventListener categoryListener = new ValueEventListener() {
+        mCategoryListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // clear previous view
@@ -141,6 +144,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             Button editButton = new Button(mActivity);
                             editButton.setText("Edit");
                             editButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            editButton.setOnClickListener(CategoryListFragment.this);
                             editButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -184,7 +188,6 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                                         });
                                         itemReference.removeValue();
                                     }
-//                                    mCategoryLayout.removeAllViews();
                                 }
                             });
                             buttonsLayout.addView(deleteButton);
@@ -192,7 +195,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                             mCategoryLayout.addView(categoryContent);
                         }
                     });
-
+//                    return;
                 }
 
             }
@@ -202,9 +205,8 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
             }
 
         };
-        categoryQuery.addValueEventListener(categoryListener);
+        categoryQuery.addValueEventListener(mCategoryListener);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -216,5 +218,15 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 startActivity(intent);
                 break;
         }
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (mCategoryListener != null) {
+            mCategoryQuery.removeEventListener(mCategoryListener);
+            mCategoryListener = null;
+        }
+        Runtime.getRuntime().gc();
     }
 }

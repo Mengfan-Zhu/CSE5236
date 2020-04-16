@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.provider.CalendarContract;
@@ -39,6 +38,8 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
+    private ValueEventListener mItemListener;
+    private Query mItemQuery;
     private View mView;
     private String mCategoryId;
     private LinearLayout mItemLayout;
@@ -65,13 +66,17 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             mCategoryId = intent.getStringExtra("categoryId");
         }
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-        Query itemQuery = mItemReference.orderByChild("name");
-        showItemList(itemQuery);
         Button addButton = mView.findViewById(R.id.btn_add_item);
         Button scanButton = mView.findViewById(R.id.btn_scan_item);
         addButton.setOnClickListener(this);
         scanButton.setOnClickListener(this);
         return mView;
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        mItemQuery = mItemReference.orderByChild("name");
+        showItemList(mItemQuery);
     }
     public void showItemList(Query itemQuery){
         ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
@@ -80,7 +85,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         mItemLayout.setPadding(10,10,10,400);
         mItemLayout.setOrientation(LinearLayout.VERTICAL);
         itemList.addView(mItemLayout);
-        ValueEventListener itemListener = new ValueEventListener() {
+        mItemListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // clear previous view
@@ -165,13 +170,14 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                         }
                     });
                 }
+//                return;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "FAIL TO UPDATE");
             }
         };
-        itemQuery.addValueEventListener(itemListener);
+        mItemQuery.addValueEventListener(mItemListener);
     }
     @Override
     public void onClick(View v) {
@@ -190,5 +196,15 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                 startActivity(scanIntent);
                 break;
         }
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (mItemListener != null) {
+            mItemQuery.removeEventListener(mItemListener);
+            mItemListener = null;
+        }
+        Runtime.getRuntime().gc();
     }
 }

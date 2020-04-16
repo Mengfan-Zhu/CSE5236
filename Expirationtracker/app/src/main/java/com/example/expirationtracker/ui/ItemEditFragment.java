@@ -45,6 +45,8 @@ public class ItemEditFragment extends Fragment {
     private Activity mActivity;
     private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
+    private ValueEventListener mCategoryListener;
+    private DatabaseReference mCategoryReference;
     private View mView;
     private String mCategoryId;
     private String mItemId;
@@ -55,6 +57,7 @@ public class ItemEditFragment extends Fragment {
     private String mDate;
     private Category mCategory;
     private long mEventId;
+    private boolean stopThread;
 
     public ItemEditFragment() {
         // Required empty public constructor
@@ -79,6 +82,7 @@ public class ItemEditFragment extends Fragment {
         mActivity = getActivity();
         final Intent intent = mActivity.getIntent();
         mCategoryId = intent.getStringExtra("categoryId");
+
         if (intent.getStringExtra("operation") != null) {
             // deal with edit
             if (intent.getStringExtra("operation").equals("Edit")) {
@@ -137,18 +141,17 @@ public class ItemEditFragment extends Fragment {
 
         return mView;
     }
-
     public void addReminder(String operation) {
-        FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid()).child(mCategoryId)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        // get date
+        int year = Integer.parseInt(mDate.substring(0, 4));
+        int month = Integer.parseInt(mDate.substring(4, 6)) - 1;
+        int day = Integer.parseInt(mDate.substring(6, 8));
+        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid()).child(mCategoryId);
+        mCategoryListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get category
                         mCategory = dataSnapshot.getValue(Category.class);
-                        // get date
-                        int year = Integer.parseInt(mDate.substring(0, 4));
-                        int month = Integer.parseInt(mDate.substring(4, 6)) - 1;
-                        int day = Integer.parseInt(mDate.substring(6, 8));
                         // get time
                         String[] time = mCategory.getTime().split(":");
                         int hour = Integer.parseInt(time[0]);
@@ -253,12 +256,22 @@ public class ItemEditFragment extends Fragment {
                         Log.e("mEventId", String.valueOf(mEventId));
                         Log.e("reminder", "Rows updated: " + rows);
                     }
+//                    return;
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
-            });
+            };
+        mCategoryReference.addListenerForSingleValueEvent(mCategoryListener);
     }
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (mCategoryListener != null) {
+            mCategoryReference.removeEventListener(mCategoryListener);
+            mCategoryListener = null;
+        }
+        Runtime.getRuntime().gc();
+    }
 }
