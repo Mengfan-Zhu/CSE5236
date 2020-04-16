@@ -1,4 +1,4 @@
-package com.example.expirationtracker.ui;
+package com.example.expirationtracker.ui.Item;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.expirationtracker.AppStatus;
 import com.example.expirationtracker.R;
+import com.example.expirationtracker.ui.NavActivity;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;

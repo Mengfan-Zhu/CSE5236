@@ -1,4 +1,4 @@
-package com.example.expirationtracker.ui;
+package com.example.expirationtracker.ui.Item;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.provider.CalendarContract;
@@ -24,7 +23,7 @@ import android.widget.TextView;
 
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Item;
-import com.example.expirationtracker.model.User;
+import com.example.expirationtracker.ui.NavActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

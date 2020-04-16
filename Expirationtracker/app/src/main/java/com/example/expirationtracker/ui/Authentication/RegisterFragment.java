@@ -1,4 +1,4 @@
-package com.example.expirationtracker.ui;
+package com.example.expirationtracker.ui.Authentication;
 
 
 import android.app.Activity;
@@ -21,6 +21,7 @@ import android.widget.EditText;
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.User;
 
+import com.example.expirationtracker.ui.NavActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -70,13 +71,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
             mEtConfirm = v.findViewById(R.id.et_repassword);
             Button btnAdd = v.findViewById(R.id.btn_register);
             btnAdd.setOnClickListener(this);
-            //Button btnExit = v.findViewById(R.id.exit_button);
-            if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180) {
-              //  btnExit.setOnClickListener(this);
-            }
-            else {
-               // btnExit.setVisibility(View.GONE);
-            }
         }
 
         return v;
@@ -84,10 +78,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onClick(View view){
-        switch (view.getId()) {
-            case R.id.btn_register:
-                createAccount();
-                break;
+        if (view.getId() == R.id.btn_register) {
+            createAccount();
         }
     }
 
@@ -114,7 +106,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                                             Toast.LENGTH_SHORT).show();
                                     mDatabase = FirebaseDatabase.getInstance().getReference();
                                     mDatabase.child("users").child(mAuth.getUid()).setValue(newUser);
-                                    Intent intent = new Intent(getActivity(),NavActivity.class);
+                                    Intent intent = new Intent(getActivity(), NavActivity.class);
                                     intent.putExtra("content", "home");
                                     startActivity(intent);
                                 } else {

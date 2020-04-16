@@ -1,4 +1,4 @@
-package com.example.expirationtracker.ui;
+package com.example.expirationtracker.ui.Item;
 
 import android.Manifest;
 import android.app.Activity;
@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
 import com.example.expirationtracker.model.Item;
+import com.example.expirationtracker.ui.NavActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

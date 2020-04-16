@@ -1,4 +1,4 @@
-package com.example.expirationtracker.ui;
+package com.example.expirationtracker.ui.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -9,42 +9,34 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import android.Manifest;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-
 import com.example.expirationtracker.R;
+import com.example.expirationtracker.ui.NavActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+public class AuthActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(getString(R.string.main_act), getString(R.string.on_create));
-
         super.onCreate(savedInstanceState);
         ActionBar actionBar = this.getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_main);
         checkPermission();
-
-
     }
     public void normalCreate(){
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null) {
-            Intent intent = new Intent(this,NavActivity.class);
+            Intent intent = new Intent(this, NavActivity.class);
             intent.putExtra("content", "home");
             startActivity(intent);
         }else{
@@ -68,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             normalCreate();
-
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults){
@@ -79,36 +71,16 @@ public class MainActivity extends AppCompatActivity {
         }else{
             normalCreate();
         }
-
-    }
-
-    protected void onStart() {
-        Log.i(getString(R.string.main_act), getString(R.string.on_start));
-        super.onStart();
-    }
-
-    public void onResume() {
-        Log.i(getString(R.string.main_act), getString(R.string.on_resume));
-        super.onResume();
-    }
-
-    public void onPause() {
-        Log.i(getString(R.string.main_act), getString(R.string.on_pause));
-        super.onPause();
-    }
-
-    public void onStop() {
-        Log.i(getString(R.string.main_act), getString(R.string.on_stop));
-        super.onStop();
     }
 
     class AuthenticationPagerAdapter extends FragmentPagerAdapter {
         private ArrayList<Fragment> fragmentList = new ArrayList<>();
 
-        public AuthenticationPagerAdapter(FragmentManager fm) {
+        AuthenticationPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int i) {
             return fragmentList.get(i);
@@ -123,6 +95,5 @@ public class MainActivity extends AppCompatActivity {
             fragmentList.add(fragment);
         }
     }
-
 
 }

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.expirationtracker.R;
-import com.example.expirationtracker.ui.MainActivity;
+import com.example.expirationtracker.ui.Authentication.AuthActivity;
 import com.example.expirationtracker.ui.NavActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -64,7 +64,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
                 break;
             case R.id.btn_logout:
                 FirebaseAuth.getInstance().signOut();
-                newIntent = new Intent(getActivity(), MainActivity.class);
+                newIntent = new Intent(getActivity(), AuthActivity.class);
                 startActivity(newIntent);
                 break;
         }

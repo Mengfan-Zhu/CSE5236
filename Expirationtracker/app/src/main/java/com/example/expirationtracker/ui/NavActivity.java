@@ -7,7 +7,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.expirationtracker.AppStatus;
 import com.example.expirationtracker.R;
+import com.example.expirationtracker.ui.Category.CategoryEditFragment;
+import com.example.expirationtracker.ui.Category.CategoryListFragment;
+import com.example.expirationtracker.ui.Item.HomeFragment;
+import com.example.expirationtracker.ui.Item.ItemEditFragment;
+import com.example.expirationtracker.ui.Item.ItemListFragment;
 import com.example.expirationtracker.ui.Setting.NameSettingFragment;
 import com.example.expirationtracker.ui.Setting.PasswordSettingFragment;
 import com.example.expirationtracker.ui.Setting.SettingFragment;
