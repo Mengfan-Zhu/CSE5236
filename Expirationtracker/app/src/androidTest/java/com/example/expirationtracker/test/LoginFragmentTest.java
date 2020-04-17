@@ -6,8 +6,8 @@ import android.widget.RelativeLayout;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.expirationtracker.R;
-import com.example.expirationtracker.ui.LoginFragment;
-import com.example.expirationtracker.ui.MainActivity;
+import com.example.expirationtracker.ui.Authentication.AuthActivity;
+import com.example.expirationtracker.ui.Authentication.LoginFragment;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,8 +20,8 @@ import static junit.framework.TestCase.assertNotNull;
 public class LoginFragmentTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
-    private MainActivity mActivity = null;
+    public ActivityTestRule<AuthActivity> mActivityTestRule = new ActivityTestRule<AuthActivity>(AuthActivity.class);
+    private AuthActivity mActivity = null;
     @Before
     public void setUp() throws Exception {
         mActivity = mActivityTestRule.getActivity();

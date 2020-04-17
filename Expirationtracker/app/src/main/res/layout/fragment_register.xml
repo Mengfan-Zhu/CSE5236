@@ -5,12 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-<<<<<<< HEAD
-    tools:context=".ui.RegisterFragment"
-    android:id="@+id/registerFrag">
-=======
+    android:id="@+id/registerFrag"
     tools:context=".ui.Authentication.RegisterFragment">
->>>>>>> 97a2952e1c77de2ff8444aa929bb93b5d982988d
 
     <TextView
         android:id="@+id/tv_logo"

@@ -5,7 +5,8 @@ import android.view.View;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.expirationtracker.R;
-import com.example.expirationtracker.ui.MainActivity;
+import com.example.expirationtracker.ui.Authentication.AuthActivity;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,11 +15,11 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertNotNull;
 
-public class MainActivityTest {
+public class AuthActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
-    private MainActivity mActivity = null;
+    public ActivityTestRule<AuthActivity> mActivityTestRule = new ActivityTestRule<AuthActivity>(AuthActivity.class);
+    private AuthActivity mActivity = null;
 
     @Before
     public void setUp() throws Exception {

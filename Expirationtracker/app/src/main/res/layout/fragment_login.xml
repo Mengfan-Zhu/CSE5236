@@ -3,12 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
-    tools:context=".ui.LoginFragment"
-    android:id="@+id/loginFrag">
-=======
+    android:id="@+id/loginFrag"
     tools:context=".ui.Authentication.LoginFragment">
->>>>>>> 97a2952e1c77de2ff8444aa929bb93b5d982988d
 
     <TextView
         android:id="@+id/tv_title"

@@ -4,13 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD
     android:orientation="vertical"
-    android:id="@+id/categoryListFrag">
-=======
-    android:id="@+id/fragment_category_list"
-    android:orientation="vertical">
->>>>>>> 97a2952e1c77de2ff8444aa929bb93b5d982988d
+    android:id="@+id/fragment_category_list">
 
     <LinearLayout
 
@@ -32,21 +27,7 @@
             android:layout_marginLeft="80dp"
             android:text="Category"
             android:textSize="25sp"/>
-<!--            -->
 
-<!--            tools:layout_editor_absoluteX="16dp"-->
-<!--            tools:layout_editor_absoluteY="16dp" />-->
-<!--        <Button-->
-<!--            android:id="@+id/btn_logout"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Log Out"-->
-<!--            android:textSize="15sp"-->
-<!--            tools:layout_editor_absoluteX="16dp"-->
-<!--            tools:layout_editor_absoluteY="16dp" />-->
-
-<!--            tools:layout_editor_absoluteX="16dp"-->
-<!--            tools:layout_editor_absoluteY="16dp" />-->
     </LinearLayout>
 
     <ScrollView
@@ -58,46 +39,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-<!--        <RelativeLayout-->
-<!--            android:layout_marginLeft="20dp"-->
-<!--            android:layout_marginRight="20dp"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:contextClickable="true"-->
-<!--            android:background="@drawable/bg_item">-->
-
-<!--            <LinearLayout-->
-<!--                android:id="@+id/category_layout"-->
-<!--                android:layout_marginRight="40dp"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="vertical">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginStart="5dp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:text="category 1" />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/category_list"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginLeft="5dp"-->
-<!--                    android:layout_marginTop="5dp"-->
-<!--                    android:text="" />-->
-<!--            </LinearLayout>-->
-
-<!--            <ImageView-->
-<!--                android:layout_width="30dp"-->
-<!--                android:layout_height="30dp"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:src="@drawable/ic_arrow_right" />-->
-
-<!--        </RelativeLayout>-->
 
     </ScrollView>
 

@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.test.rule.ActivityTestRule;
 
 import com.example.expirationtracker.R;
-import com.example.expirationtracker.ui.ScanActivity;
+import com.example.expirationtracker.ui.Item.ScanActivity;
 
 import org.junit.After;
 import org.junit.Before;
