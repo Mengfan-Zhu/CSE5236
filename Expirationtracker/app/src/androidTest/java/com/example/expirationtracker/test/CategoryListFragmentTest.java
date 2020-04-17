@@ -1,8 +1,10 @@
 //package com.example.expirationtracker.test;
 //
+//import android.content.Intent;
 //import android.view.View;
 //import android.widget.LinearLayout;
 //
+//import androidx.test.espresso.intent.rule.IntentsTestRule;
 //import androidx.test.rule.ActivityTestRule;
 //
 //import com.example.expirationtracker.R;
@@ -20,15 +22,24 @@
 //public class CategoryListFragmentTest {
 //
 //    @Rule
-//    public ActivityTestRule<NavActivity> mActivityTestRule = new ActivityTestRule<>(NavActivity.class);
+//    public IntentsTestRule<NavActivity> mIntentsRule  = new IntentsTestRule<NavActivity>(NavActivity.class){
+//        @Override
+//        protected Intent getActivityIntent() {
+//            Intent intent = new Intent();
+//            intent.putExtra("content", "CATEGORY_LIST");
+//            return intent;
+//        }
+//    };
 //    private NavActivity mActivity = null;
 //    @Before
 //    public void setUp() throws Exception {
-//        mActivity = mActivityTestRule.getActivity();
+//        mActivity = mIntentsRule.getActivity();
 //    }
 //
 //    @Test
 //    public void testLaunch(){
+////        View view = mActivity.findViewById(R.id.fragment_category_list);
+////        assertNotNull(view);
 ////        LinearLayout container = (LinearLayout) mActivity.findViewById(R.id.fragment_category_list);
 ////        assertNotNull(container);
 ////        CategoryListFragment test = new CategoryListFragment();

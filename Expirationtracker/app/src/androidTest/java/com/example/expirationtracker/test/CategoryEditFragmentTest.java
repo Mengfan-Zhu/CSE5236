@@ -4,6 +4,7 @@
 //import android.view.View;
 //import android.widget.LinearLayout;
 //
+//import androidx.test.espresso.intent.rule.IntentsTestRule;
 //import androidx.test.rule.ActivityTestRule;
 //
 //import com.example.expirationtracker.R;
@@ -21,25 +22,29 @@
 //public class CategoryEditFragmentTest {
 //
 //    @Rule
-//    public ActivityTestRule<NavActivity> mActivityTestRule = new ActivityTestRule<>(NavActivity.class);
+//    public IntentsTestRule<NavActivity> mIntentsRule  = new IntentsTestRule<NavActivity>(NavActivity.class){
+//        @Override
+//        protected Intent getActivityIntent() {
+//            Intent intent = new Intent();
+//            intent.putExtra("content", "CATEGORY_EDIT");
+//            return intent;
+//        }
+//    };
 //    private NavActivity mActivity = null;
 //    @Before
 //    public void setUp() throws Exception {
-//        Intent intent = new Intent(mActivity, NavActivity.class);
-//        intent.putExtra("content", "HOME");
-//        mActivity = mActivityTestRule.launchActivity(intent);
+//        mActivity = mIntentsRule.getActivity();
 //    }
 //
 //    @Test
 //    public void testLaunch(){
-//
-////        LinearLayout container = (LinearLayout) mActivity.findViewById(R.id.container);
-////        assertNotNull(container);
-////        CategoryEditFragment test = new CategoryEditFragment();
-////        mActivity.getSupportFragmentManager().beginTransaction().add(container.getId(), test).commitAllowingStateLoss();
-////        getInstrumentation().waitForIdleSync();
-////        View view = test.getView();
-////        assertNotNull(view);
+//        LinearLayout container = (LinearLayout) mActivity.findViewById(R.id.fragment_category_edit);
+//        assertNotNull(container);
+//        CategoryEditFragment test = new CategoryEditFragment();
+//        mActivity.getSupportFragmentManager().beginTransaction().add(container.getId(), test).commitAllowingStateLoss();
+//        getInstrumentation().waitForIdleSync();
+//        View view = test.getView();
+//        assertNotNull(view);
 //    }
 //
 //    @After

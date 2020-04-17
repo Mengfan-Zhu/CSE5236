@@ -83,8 +83,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         mActivity = getActivity();
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(auth.getUid()));
         ScrollView itemList = view.findViewById(R.id.home_layout);
         itemList.setFillViewport(true);
         mItemLayout = new LinearLayout(mActivity);
@@ -96,6 +94,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onStart(){
         super.onStart();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(auth.getUid()));
         mItemQuery = mItemReference.orderByChild("name");
         showItemList();
     }
