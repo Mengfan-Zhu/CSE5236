@@ -20,9 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.ScanActivity" />
+        <activity android:name=".ui.Item.ScanActivity" />
         <activity android:name=".ui.NavActivity" />
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.Authentication.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

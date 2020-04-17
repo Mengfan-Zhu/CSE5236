@@ -1,4 +1,4 @@
-package com.example.expirationtracker.ui;
+package com.example.expirationtracker.ui.Item;
 
 
 import android.app.Activity;
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.provider.CalendarContract;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Item;
+import com.example.expirationtracker.ui.NavActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,6 +39,8 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
+    private ValueEventListener mItemListener;
+    private Query mItemQuery;
     private View mView;
     private String mCategoryId;
     private LinearLayout mItemLayout;
@@ -65,13 +67,17 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             mCategoryId = intent.getStringExtra("categoryId");
         }
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-        Query itemQuery = mItemReference.orderByChild("name");
-        showItemList(itemQuery);
         Button addButton = mView.findViewById(R.id.btn_add_item);
         Button scanButton = mView.findViewById(R.id.btn_scan_item);
         addButton.setOnClickListener(this);
         scanButton.setOnClickListener(this);
         return mView;
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        mItemQuery = mItemReference.orderByChild("name");
+        showItemList(mItemQuery);
     }
     public void showItemList(Query itemQuery){
         ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
@@ -80,7 +86,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         mItemLayout.setPadding(10,10,10,400);
         mItemLayout.setOrientation(LinearLayout.VERTICAL);
         itemList.addView(mItemLayout);
-        ValueEventListener itemListener = new ValueEventListener() {
+        mItemListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // clear previous view
@@ -132,7 +138,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "itemEdit");
+                                    intent.putExtra("content", "ITEM_EDIT");
                                     intent.putExtra("itemName",item.getName());
                                     intent.putExtra("itemExpirationDate",item.getExpirationDate());
                                     intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
@@ -165,20 +171,21 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                         }
                     });
                 }
+//                return;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "FAIL TO UPDATE");
             }
         };
-        itemQuery.addValueEventListener(itemListener);
+        mItemQuery.addValueEventListener(mItemListener);
     }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_add_item:
                 Intent addIntent = new Intent(mActivity, NavActivity.class);
-                addIntent.putExtra("content", "itemEdit");
+                addIntent.putExtra("content", "ITEM_EDIT");
                 addIntent.putExtra("operation", "Add");
                 addIntent.putExtra("categoryId",mCategoryId);
                 startActivity(addIntent);
@@ -190,5 +197,15 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                 startActivity(scanIntent);
                 break;
         }
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // Remove post value event listener
+        if (mItemListener != null) {
+            mItemQuery.removeEventListener(mItemListener);
+            mItemListener = null;
+        }
+        Runtime.getRuntime().gc();
     }
 }

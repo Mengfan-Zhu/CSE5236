@@ -4,8 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< HEAD
     tools:context=".ui.MainActivity"
     android:id="@+id/mainAct">
+=======
+    tools:context=".ui.Authentication.AuthActivity">
+>>>>>>> 97a2952e1c77de2ff8444aa929bb93b5d982988d
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

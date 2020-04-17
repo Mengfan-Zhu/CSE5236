@@ -3,9 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< HEAD
     tools:context=".ui.CategoryEditFragment"
     android:orientation="vertical"
     android:id="@+id/categoryEditFrag">
+=======
+    tools:context=".ui.Category.CategoryEditFragment"
+    android:id="@+id/fragment_category_edit"
+    android:orientation="vertical">
+>>>>>>> 97a2952e1c77de2ff8444aa929bb93b5d982988d
 
     <LinearLayout
         android:layout_width="match_parent"
