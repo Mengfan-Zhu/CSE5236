@@ -1,15 +1,14 @@
 package com.example.expirationtracker.ui.Item;
 
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,7 +19,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Item;
 import com.example.expirationtracker.ui.NavActivity;
@@ -31,13 +29,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ItemListFragment extends Fragment implements View.OnClickListener{
 
-    private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
     private ValueEventListener mItemListener;
     private Query mItemQuery;
@@ -45,7 +43,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
     private String mCategoryId;
     private LinearLayout mItemLayout;
     private Activity mActivity;
-    String TAG = "Item List Fragment";
+    private String TAG = "Item List Fragment";
     public ItemListFragment() {
         // Required empty public constructor
     }
@@ -61,12 +59,12 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         Log.e("List","onCreateView");
         // TODO: Need to load all categories from database.
         mView = inflater.inflate(R.layout.fragment_item_list, container, false);
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         Intent intent = mActivity.getIntent();
         if (intent != null) {
             mCategoryId = intent.getStringExtra("categoryId");
         }
-        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
+        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(auth.getUid())).child(mCategoryId);
         Button addButton = mView.findViewById(R.id.btn_add_item);
         Button scanButton = mView.findViewById(R.id.btn_scan_item);
         addButton.setOnClickListener(this);
@@ -79,7 +77,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         mItemQuery = mItemReference.orderByChild("name");
         showItemList(mItemQuery);
     }
-    public void showItemList(Query itemQuery){
+    private void showItemList(Query itemQuery){
         ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
         itemList.setFillViewport(true);
         mItemLayout = new LinearLayout(mActivity);
@@ -88,7 +86,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         itemList.addView(mItemLayout);
         mItemListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // clear previous view
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -101,6 +99,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                     final String itemId = currentSnapshot.getKey();
                     final Item item = currentSnapshot.getValue(Item.class);
                     mActivity.runOnUiThread(new Runnable() {
+                        @SuppressLint("DefaultLocale")
                         @Override
                         public void run() {
                             // linearLayout for one item content
@@ -116,15 +115,13 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                             // TextView for name
                             TextView name = new TextView(mActivity);
                             name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            name.setText(item.getName());
+                            name.setText(Objects.requireNonNull(item).getName());
                             name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                             itemContent.addView(name);
                             // TextView for contents
                             TextView contents = new TextView(mActivity);
                             contents.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            contents.setText("Expiration Date: " + item.getExpirationDate()
-                                    + "\nQuantity: " + item.getQuantity()
-                                    + "\nDescription: " + item.getDescription());
+                            contents.setText(String.format("Expiration Date: %s\nQuantity: %d\nDescription: %s", item.getExpirationDate(), item.getQuantity(), item.getDescription()));
                             itemContent.addView(contents);
                             // linearLayout for buttons
                             LinearLayout buttonsLayout = new LinearLayout(mActivity);
@@ -132,7 +129,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                             buttonsLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             // edit button
                             Button editButton = new Button(mActivity);
-                            editButton.setText("Edit");
+                            editButton.setText(R.string.edit);
                             editButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             editButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -153,7 +150,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                             buttonsLayout.addView(editButton);
                             // delete button
                             Button deleteButton = new Button(mActivity);
-                            deleteButton.setText("Delete");
+                            deleteButton.setText(R.string.delete);
                             deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             deleteButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -161,7 +158,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                                     ContentResolver cr = mActivity.getContentResolver();
                                     Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
                                     cr.delete(deleteEvent, null, null);
-                                    mItemReference.child(itemId).removeValue();
+                                    mItemReference.child(Objects.requireNonNull(itemId)).removeValue();
                                     mItemLayout.removeAllViews();
                                 }
                             });
@@ -174,7 +171,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
 //                return;
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "FAIL TO UPDATE");
             }
         };

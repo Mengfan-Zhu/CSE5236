@@ -53,7 +53,6 @@ public class ItemEditFragment extends Fragment implements View.OnClickListener{
     private String mDate;
     private Category mCategory;
     private long mEventId;
-    private boolean stopThread;
 
     public ItemEditFragment() {
         // Required empty public constructor

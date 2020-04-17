@@ -37,5 +37,10 @@
     <string name="title_notifications">Notifications</string>
     <string name="scan_search_waiting">Waiting for searching item name</string>
     <string name="scan_search_fail">Can\'t find item, please input the item name</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="date_format">yyyyMMdd</string>
+    <string name="expired_items">Expired Items</string>
+    <string name="not_expired_items">Not Expired Items</string>
 
 </resources>

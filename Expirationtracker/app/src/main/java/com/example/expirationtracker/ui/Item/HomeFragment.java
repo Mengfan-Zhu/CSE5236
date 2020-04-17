@@ -1,5 +1,6 @@
 package com.example.expirationtracker.ui.Item;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -8,8 +9,8 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,7 +21,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Item;
 import com.example.expirationtracker.ui.NavActivity;
@@ -31,7 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
@@ -50,9 +50,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
-    private View mView;
     private Activity mActivity;
     private LinearLayout mItemLayout;
     private ValueEventListener mItemListener;
@@ -75,16 +73,16 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mActivity = getActivity();
-        mView = inflater.inflate(R.layout.fragment_home, container, false);
-        mAuth = FirebaseAuth.getInstance();
-        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid());
-        ScrollView itemList = (ScrollView) mView.findViewById(R.id.home_layout);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(auth.getUid()));
+        ScrollView itemList = (ScrollView) view.findViewById(R.id.home_layout);
         itemList.setFillViewport(true);
         mItemLayout = new LinearLayout(mActivity);
         mItemLayout.setPadding(10,10,10,400);
         mItemLayout.setOrientation(LinearLayout.VERTICAL);
         itemList.addView(mItemLayout);
-        return mView;
+        return view;
     }
     @Override
     public void onStart(){
@@ -92,11 +90,12 @@ public class HomeFragment extends Fragment {
         mItemQuery = mItemReference.orderByChild("name");
         showItemList(mItemQuery);
     }
-    public void showItemList(Query itemQuery){
+    private void showItemList(Query itemQuery){
         mItemListener = new ValueEventListener() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat sdf = new SimpleDateFormat(getString(R.string.date_format));
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // clear previous view
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -119,12 +118,12 @@ public class HomeFragment extends Fragment {
                         Date expDate = null;
                         Date currDate = null;
                         try {
-                            expDate = sdf.parse(item.getExpirationDate());
+                            expDate = sdf.parse(Objects.requireNonNull(item).getExpirationDate());
                             currDate = sdf.parse(sdf.format(new Date() ));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        if(expDate.compareTo(currDate) > 0 ){
+                        if(Objects.requireNonNull(expDate).compareTo(currDate) > 0 ){
                             nonExpired.add(item);
                             nonExpiredId.put(item, id);
                         }else{
@@ -141,36 +140,36 @@ public class HomeFragment extends Fragment {
 //                nonExpiredId.clear();
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "FAIL TO UPDATE");
             }
         };
         mItemQuery.addValueEventListener(mItemListener);
     }
-    public void addListView(List<Item> list, Map<Item, String[]> idList,boolean isExpired){
+    private void addListView(List<Item> list, Map<Item, String[]> idList, boolean isExpired){
         mActivity.runOnUiThread(new Runnable() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void run() {
                 Collections.sort(list, new Comparator<Item>(){
                     @Override
                     public int compare(Item i1, Item i2) {
-                        int diff = (Integer.parseInt(i1.getExpirationDate()) - Integer.parseInt(i2.getExpirationDate()));
-                        return diff;
+                        return (Integer.parseInt(i1.getExpirationDate()) - Integer.parseInt(i2.getExpirationDate()));
                     }
                 });
                 TextView itemList = new TextView(mActivity);
                 itemList.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 if(isExpired){
-                    itemList.setText("Expired Items");
+                    itemList.setText(R.string.expired_items);
                     itemList.setTextColor(Color.parseColor("#FF0000"));
                 }else{
-                    itemList.setText("Not Expired Items");
+                    itemList.setText(R.string.not_expired_items);
                 }
                 itemList.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                 mItemLayout.addView(itemList);
                 for(Item item : list){
-                    String itemId = idList.get(item)[0];
-                    String categoryId = idList.get(item)[1];
+                    String itemId = Objects.requireNonNull(idList.get(item))[0];
+                    String categoryId = Objects.requireNonNull(idList.get(item))[1];
                     LinearLayout itemContent = new LinearLayout(mActivity);
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -189,9 +188,9 @@ public class HomeFragment extends Fragment {
                     // TextView for contents
                     TextView contents = new TextView(mActivity);
                     contents.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    contents.setText("Expiration Date: " + item.getExpirationDate()
-                            + "\nQuantity: " + item.getQuantity()
-                            + "\nDescription: " + item.getDescription());
+                    contents.setText(String.format("Expiration Date: %s\n" +
+                            "Quantity: %d\n" +
+                            "Description: %s", item.getExpirationDate(), item.getQuantity(), item.getDescription()));
                     itemContent.addView(contents);
                     if(isExpired){
                         name.setTextColor(Color.parseColor("#FF0000"));
@@ -202,7 +201,7 @@ public class HomeFragment extends Fragment {
                     buttonsLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     // edit button
                     Button editButton = new Button(mActivity);
-                    editButton.setText("Edit");
+                    editButton.setText(R.string.edit);
                     editButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     editButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -223,7 +222,7 @@ public class HomeFragment extends Fragment {
                     buttonsLayout.addView(editButton);
                     // delete button
                     Button deleteButton = new Button(mActivity);
-                    deleteButton.setText("Delete");
+                    deleteButton.setText(R.string.delete);
                     deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     deleteButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -241,7 +240,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        return;
     }
     @Override
     public void onStop() {
