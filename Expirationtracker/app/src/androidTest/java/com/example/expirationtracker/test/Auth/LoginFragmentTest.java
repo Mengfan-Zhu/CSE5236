@@ -1,4 +1,4 @@
-package com.example.expirationtracker.test;
+package com.example.expirationtracker.test.Auth;
 
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -8,6 +8,7 @@ import androidx.test.rule.ActivityTestRule;
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.ui.Authentication.AuthActivity;
 import com.example.expirationtracker.ui.Authentication.LoginFragment;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,13 +30,16 @@ public class LoginFragmentTest {
 
     @Test
     public void testLaunch(){
-        RelativeLayout container = mActivity.findViewById(R.id.loginFrag);
-        assertNotNull(container);
-        LoginFragment test = new LoginFragment();
-        mActivity.getSupportFragmentManager().beginTransaction().add(container.getId(), test).commitAllowingStateLoss();
-        getInstrumentation().waitForIdleSync();
-        View view = test.getView();
-        assertNotNull((view));
+        if(FirebaseAuth.getInstance().getCurrentUser()==null) {
+            RelativeLayout container = mActivity.findViewById(R.id.loginFrag);
+            assertNotNull(container);
+            LoginFragment test = new LoginFragment();
+            mActivity.getSupportFragmentManager().beginTransaction().add(container.getId(), test).commitAllowingStateLoss();
+            getInstrumentation().waitForIdleSync();
+            View view = test.getView();
+            assertNotNull((view));
+
+        }
 
     }
 

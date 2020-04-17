@@ -1,4 +1,4 @@
-package com.example.expirationtracker.test;
+package com.example.expirationtracker.test.Auth;
 
 import android.view.View;
 
