@@ -226,7 +226,7 @@ public class ItemEditFragment extends Fragment implements View.OnClickListener{
                         Toast.LENGTH_SHORT).show();
                 ((EditText) mView.findViewById(R.id.text_item_name)).setText("");
             } else {
-                DatePicker datePicker = (DatePicker) mView.findViewById(R.id.date_picker);
+                DatePicker datePicker = mView.findViewById(R.id.date_picker);
                 int day = datePicker.getDayOfMonth();
                 int month = datePicker.getMonth() + 1;
                 int year = datePicker.getYear();

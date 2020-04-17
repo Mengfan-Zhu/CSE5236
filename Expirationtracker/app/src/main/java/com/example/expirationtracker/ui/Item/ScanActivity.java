@@ -122,7 +122,7 @@ public class ScanActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        };
+                        }
                     }
                 }.start();
             }

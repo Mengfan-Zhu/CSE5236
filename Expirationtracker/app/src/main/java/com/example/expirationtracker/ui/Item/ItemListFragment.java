@@ -84,7 +84,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         showItemList(mItemQuery);
     }
     private void showItemList(Query itemQuery){
-        ScrollView itemList = (ScrollView) mView.findViewById(R.id.item_layout);
+        ScrollView itemList = mView.findViewById(R.id.item_layout);
         itemList.setFillViewport(true);
         mItemLayout = new LinearLayout(mActivity);
         mItemLayout.setPadding(10,10,10,400);

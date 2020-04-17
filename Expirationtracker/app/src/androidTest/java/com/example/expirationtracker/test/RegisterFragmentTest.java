@@ -29,7 +29,7 @@ public class RegisterFragmentTest {
 
     @Test
     public void testLaunch(){
-        LinearLayout container = (LinearLayout) mActivity.findViewById(R.id.registerFrag);
+        LinearLayout container = mActivity.findViewById(R.id.registerFrag);
         assertNotNull(container);
         RegisterFragment test = new RegisterFragment();
         mActivity.getSupportFragmentManager().beginTransaction().add(container.getId(), test).commitAllowingStateLoss();

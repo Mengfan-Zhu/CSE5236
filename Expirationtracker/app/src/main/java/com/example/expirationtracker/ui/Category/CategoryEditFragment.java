@@ -213,7 +213,7 @@ public class CategoryEditFragment extends Fragment implements View.OnClickListen
                 mBegin = ((Spinner) mView.findViewById(R.id.notification_setting)).getSelectedItem().toString();
                 int selectedId = ((RadioGroup) mView.findViewById(R.id.frequency)).getCheckedRadioButtonId();
                 mFrequency = ((RadioButton) mView.findViewById(selectedId)).getText().toString();
-                TimePicker time = (TimePicker) mView.findViewById(R.id.time_picker);
+                TimePicker time = mView.findViewById(R.id.time_picker);
                 mHourRemindingTime = Integer.toString(time.getCurrentHour());
                 mMinuteRemindingTime = Integer.toString(time.getCurrentMinute());
                 if (mHourRemindingTime.length() == 1) {

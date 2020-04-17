@@ -29,7 +29,7 @@ public class LoginFragmentTest {
 
     @Test
     public void testLaunch(){
-        RelativeLayout container = (RelativeLayout) mActivity.findViewById(R.id.loginFrag);
+        RelativeLayout container = mActivity.findViewById(R.id.loginFrag);
         assertNotNull(container);
         LoginFragment test = new LoginFragment();
         mActivity.getSupportFragmentManager().beginTransaction().add(container.getId(), test).commitAllowingStateLoss();

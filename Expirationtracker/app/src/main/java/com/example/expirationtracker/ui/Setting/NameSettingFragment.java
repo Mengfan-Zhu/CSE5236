@@ -72,7 +72,12 @@ public class NameSettingFragment extends Fragment implements View.OnClickListene
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // get user info
                 User u = dataSnapshot.getValue(User.class);
-                ((EditText) mView.findViewById((R.id.name_setting_text))).setText(Objects.requireNonNull(u).getName());
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((EditText) mView.findViewById((R.id.name_setting_text))).setText(Objects.requireNonNull(u).getName());
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

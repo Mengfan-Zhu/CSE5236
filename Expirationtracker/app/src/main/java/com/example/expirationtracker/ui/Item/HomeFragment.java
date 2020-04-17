@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         FirebaseAuth auth = FirebaseAuth.getInstance();
         mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(auth.getUid()));
-        ScrollView itemList = (ScrollView) view.findViewById(R.id.home_layout);
+        ScrollView itemList = view.findViewById(R.id.home_layout);
         itemList.setFillViewport(true);
         mItemLayout = new LinearLayout(mActivity);
         mItemLayout.setPadding(10,10,10,400);
@@ -143,10 +143,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
                 }
                 addListView(expired,expiredId,true);
                 addListView(nonExpired,nonExpiredId,false);
-//                expiredId.clear();
-//                expired.clear();
-//                nonExpired.clear();
-//                nonExpiredId.clear();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

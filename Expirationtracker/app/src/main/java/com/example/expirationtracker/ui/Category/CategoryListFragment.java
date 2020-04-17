@@ -82,7 +82,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         mAuth = FirebaseAuth.getInstance();
 
         // set up layouts
-        ScrollView categoryList = (ScrollView) view.findViewById(R.id.category_layout);
+        ScrollView categoryList = view.findViewById(R.id.category_layout);
         mCategoryLayout = new LinearLayout(mActivity);
         mCategoryLayout.setPadding(10,10,10,400);
         mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
