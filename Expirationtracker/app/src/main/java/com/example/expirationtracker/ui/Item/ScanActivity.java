@@ -1,6 +1,7 @@
 package com.example.expirationtracker.ui.Item;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,6 +10,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.expirationtracker.AppStatus;
@@ -22,6 +25,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,6 +40,8 @@ public class ScanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        ActionBar actionBar = this.getSupportActionBar();
+        Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
         if (!AppStatus.getInstance(this).isOnline()) {
             Toast.makeText(this, "Network connection issue",
                     Toast.LENGTH_SHORT).show();
@@ -106,6 +112,7 @@ public class ScanActivity extends AppCompatActivity {
                                     intent.putExtra("itemName",msg);
                                     intent.putExtra("content", "ITEM_EDIT");
                                     startActivity(intent);
+                                    ScanActivity.this.finish();
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -118,6 +125,7 @@ public class ScanActivity extends AppCompatActivity {
                                     intent.putExtra("categoryId",mCategoryId);
                                     intent.putExtra("content", "ITEM_EDIT");
                                     startActivity(intent);
+                                    ScanActivity.this.finish();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -150,9 +158,23 @@ public class ScanActivity extends AppCompatActivity {
         return null;
     }
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, NavActivity.class);
+        intent.putExtra("content", "ITEM_LIST");
+        intent.putExtra("categoryId",mCategoryId);
+        startActivity(intent);
+        this.finish();
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        this.finish();
         stopThread = true;
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode == KeyEvent.KEYCODE_BACK;
     }
 }
 

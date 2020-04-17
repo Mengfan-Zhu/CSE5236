@@ -95,9 +95,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onStart(){
         super.onStart();
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(auth.getUid()));
-        mItemQuery = mItemReference.orderByChild("name");
-        showItemList();
+        if(auth.getUid()!=null){
+            mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(auth.getUid());
+            mItemQuery = mItemReference.orderByChild("name");
+            showItemList();
+        }
     }
     private void showItemList(){
         mItemListener = new ValueEventListener() {

@@ -14,6 +14,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MenuItem;
+
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.ui.NavActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +51,11 @@ public class AuthActivity extends AppCompatActivity {
         }
 
     }
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        this.finish();
+        return super.onOptionsItemSelected(item);
+    }
     public void checkPermission(){
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(this,
@@ -95,5 +102,13 @@ public class AuthActivity extends AppCompatActivity {
             fragmentList.add(fragment);
         }
     }
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.finish();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode == KeyEvent.KEYCODE_BACK;
+    }
 }

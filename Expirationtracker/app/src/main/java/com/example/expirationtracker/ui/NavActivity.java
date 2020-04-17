@@ -19,13 +19,13 @@ import com.example.expirationtracker.ui.Setting.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.Objects;
 
 public class NavActivity extends AppCompatActivity {
-    private BottomNavigationView mBottomNavigation;
     private String mParent= null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class NavActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     openFragment("HOME");
-                    mParent = "HOME";
+                    mParent = "EXIT";
                     return true;
                 case R.id.navigation_category:
                     openFragment("CATEGORY_LIST");
@@ -55,20 +55,24 @@ public class NavActivity extends AppCompatActivity {
     @Override
     public void onStart(){
         super.onStart();
+        ActionBar actionBar = this.getSupportActionBar();
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
+        bottomNavigation.setOnNavigationItemSelectedListener(mNavigationListener);
+        Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
         if (!AppStatus.getInstance(this).isOnline()) {
             Toast.makeText(this, "Network connection issue",
                     Toast.LENGTH_SHORT).show();
+            mParent = "EXIT";
         }else {
-            ActionBar actionBar = this.getSupportActionBar();
-            Objects.requireNonNull(actionBar).setDisplayHomeAsUpEnabled(true);
-            mBottomNavigation = findViewById(R.id.bottom_navigation);
-            mBottomNavigation.setOnNavigationItemSelectedListener(mNavigationListener);
             Intent intent = this.getIntent();
             if (intent != null) {
                 String content = intent.getStringExtra("content");
                 openFragment(content);
                 switch (Objects.requireNonNull(content)) {
-                    case "HOME": case "CATEGORY_LIST":case "ITEM_EDIT_FROM_EDIT":case "SETTING":
+                    case "HOME":
+                        mParent = "EXIT";
+                        break;
+                    case "CATEGORY_LIST":case "ITEM_EDIT_FROM_HOME":case "SETTING":
                         mParent = "HOME";
                         break;
                     case "ITEM_LIST":case "CATEGORY_EDIT":
@@ -90,11 +94,17 @@ public class NavActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            openFragment(mParent);
-            if (mParent.equals("ITEM_LIST")) {
-                mParent = "CATEGORY_LIST";
+            if (mParent.equals("EXIT")) {
+                this.finish();
             } else {
-                mParent = "HOME";
+                openFragment(mParent);
+                if (mParent.equals("ITEM_LIST")) {
+                    mParent = "CATEGORY_LIST";
+                } else if(mParent.equals("HOME")){
+                    mParent = "EXIT";
+                }else{
+                    mParent = "HOME";
+                }
             }
         }
         return super.onOptionsItemSelected(item);
@@ -136,12 +146,13 @@ public class NavActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
     @Override
-    public void onStop() {
+    public void onStop(){
         super.onStop();
-        mBottomNavigation.setOnNavigationItemReselectedListener(null);
-        mBottomNavigation = null;
-        Runtime.getRuntime().gc();
+        this.finish();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return keyCode == KeyEvent.KEYCODE_BACK;
     }
 }

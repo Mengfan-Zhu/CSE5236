@@ -75,6 +75,12 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         Button scanButton = mView.findViewById(R.id.btn_scan_item);
         addButton.setOnClickListener(this);
         scanButton.setOnClickListener(this);
+        ScrollView itemList = mView.findViewById(R.id.item_layout);
+        itemList.setFillViewport(true);
+        mItemLayout = new LinearLayout(mActivity);
+        mItemLayout.setPadding(10,10,10,400);
+        mItemLayout.setOrientation(LinearLayout.VERTICAL);
+        itemList.addView(mItemLayout);
         return mView;
     }
     @Override
@@ -84,12 +90,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         showItemList(mItemQuery);
     }
     private void showItemList(Query itemQuery){
-        ScrollView itemList = mView.findViewById(R.id.item_layout);
-        itemList.setFillViewport(true);
-        mItemLayout = new LinearLayout(mActivity);
-        mItemLayout.setPadding(10,10,10,400);
-        mItemLayout.setOrientation(LinearLayout.VERTICAL);
-        itemList.addView(mItemLayout);
+
         mItemListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -214,6 +215,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
             mItemQuery.removeEventListener(mItemListener);
             mItemListener = null;
         }
+        mItemLayout.removeAllViews();
         Runtime.getRuntime().gc();
     }
 }

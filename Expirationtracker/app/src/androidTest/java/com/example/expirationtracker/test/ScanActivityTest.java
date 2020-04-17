@@ -26,7 +26,7 @@ public class ScanActivityTest {
     @Rule
     public IntentsTestRule<ScanActivity> mIntentsRule  = new IntentsTestRule<ScanActivity>(ScanActivity.class);
     private ScanActivity mActivity;
-    
+
     @Before
     public void setUp() throws Exception {
         mActivity = mIntentsRule.getActivity();

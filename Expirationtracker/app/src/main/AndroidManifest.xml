@@ -21,8 +21,11 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.Item.ScanActivity" />
-        <activity android:name=".ui.NavActivity" />
-        <activity android:name=".ui.Authentication.AuthActivity">
+        <activity android:name=".ui.NavActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+
+        <activity android:name=".ui.Authentication.AuthActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

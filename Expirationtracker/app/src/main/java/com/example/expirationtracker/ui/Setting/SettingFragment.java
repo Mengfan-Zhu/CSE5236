@@ -66,6 +66,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
                 FirebaseAuth.getInstance().signOut();
                 newIntent = new Intent(getActivity(), AuthActivity.class);
                 startActivity(newIntent);
+                getActivity().finish();
                 break;
         }
     }

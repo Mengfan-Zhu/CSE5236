@@ -75,30 +75,34 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void loginIn() {
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
-        Log.d(TAG, "signIn:" + username);
-        // sign in with email address and password
-        mAuth.signInWithEmailAndPassword(username, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    FragmentActivity activity = getActivity();
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(activity.getApplicationContext(), "Authentication success.",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), NavActivity.class);
-                            intent.putExtra("content", "HOME");
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(activity.getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+        if (!username.equals("") && !password.equals("")) {
+            // sign in with email address and password
+            mAuth.signInWithEmailAndPassword(username, password)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        FragmentActivity activity = getActivity();
 
-                    }
-                });
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Toast.makeText(activity.getApplicationContext(), "Authentication success.",
+                                        Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getActivity(), NavActivity.class);
+                                intent.putExtra("content", "HOME");
+                                startActivity(intent);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(activity.getApplicationContext(), "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+        }else{
+            Toast.makeText(Objects.requireNonNull(getActivity()).getApplicationContext(), "Username or Password cannot be empty", Toast.LENGTH_SHORT).show();
+        }
     }
 }
