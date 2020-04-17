@@ -43,6 +43,12 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
     private String mCategoryId;
     private LinearLayout mItemLayout;
     private Activity mActivity;
+    private final int MAXSIZE = 1000;
+    private Button[] mEditButtons = new Button[MAXSIZE];
+    private Button[] mDeleteButtons = new Button[MAXSIZE];
+    private Item[] mItems = new Item[MAXSIZE];
+    private String[] mItemIds = new String[MAXSIZE];
+    private int mCount = 0;
     private String TAG = "Item List Fragment";
     public ItemListFragment() {
         // Required empty public constructor
@@ -98,6 +104,8 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String itemId = currentSnapshot.getKey();
                     final Item item = currentSnapshot.getValue(Item.class);
+                    mItemIds[mCount] = itemId;
+                    mItems[mCount] = item;
                     mActivity.runOnUiThread(new Runnable() {
                         @SuppressLint("DefaultLocale")
                         @Override
@@ -128,45 +136,24 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                             buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
                             buttonsLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             // edit button
-                            Button editButton = new Button(mActivity);
-                            editButton.setText(R.string.edit);
-                            editButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            editButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "ITEM_EDIT");
-                                    intent.putExtra("itemName",item.getName());
-                                    intent.putExtra("itemExpirationDate",item.getExpirationDate());
-                                    intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
-                                    intent.putExtra("itemDescription",item.getDescription());
-                                    intent.putExtra("itemId",itemId);
-                                    intent.putExtra("eventId",Long.toString(item.getEventId()));
-                                    intent.putExtra("categoryId",mCategoryId);
-                                    intent.putExtra("operation","Edit");
-                                    startActivity(intent);
-                                }
-                            });
-                            buttonsLayout.addView(editButton);
+                            mEditButtons[mCount] = new Button(mActivity);
+                            mEditButtons[mCount].setText(R.string.edit);
+                            mEditButtons[mCount].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            mEditButtons[mCount].setOnClickListener(ItemListFragment.this);
+                            mEditButtons[mCount].setId(mCount);
+                            buttonsLayout.addView(mEditButtons[mCount]);
                             // delete button
-                            Button deleteButton = new Button(mActivity);
-                            deleteButton.setText(R.string.delete);
-                            deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            deleteButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    ContentResolver cr = mActivity.getContentResolver();
-                                    Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
-                                    cr.delete(deleteEvent, null, null);
-                                    mItemReference.child(Objects.requireNonNull(itemId)).removeValue();
-                                    mItemLayout.removeAllViews();
-                                }
-                            });
-                            buttonsLayout.addView(deleteButton);
+                            mDeleteButtons[mCount] = new Button(mActivity);
+                            mDeleteButtons[mCount].setText(R.string.delete);
+                            mDeleteButtons[mCount].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            mDeleteButtons[mCount].setOnClickListener(ItemListFragment.this);
+                            mDeleteButtons[mCount].setId(MAXSIZE + mCount);
+                            buttonsLayout.addView(mDeleteButtons[mCount]);
                             itemContent.addView(buttonsLayout);
                             mItemLayout.addView(itemContent);
                         }
                     });
+                    mCount++;
                 }
 //                return;
             }
@@ -193,6 +180,30 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                 scanIntent.putExtra("categoryId",mCategoryId);
                 startActivity(scanIntent);
                 break;
+        }
+        for (int i = 0; i < mCount; i++) {
+            if (v.getId() == mEditButtons[i].getId()) {
+                Intent intent = new Intent(mActivity, NavActivity.class);
+                intent.putExtra("content", "ITEM_EDIT");
+                intent.putExtra("itemName",mItems[i].getName());
+                intent.putExtra("itemExpirationDate",mItems[i].getExpirationDate());
+                intent.putExtra("itemQuantity",Integer.toString(mItems[i].getQuantity()));
+                intent.putExtra("itemDescription",mItems[i].getDescription());
+                intent.putExtra("itemId",mItemIds[i]);
+                intent.putExtra("eventId",Long.toString(mItems[i].getEventId()));
+                intent.putExtra("categoryId",mCategoryId);
+                intent.putExtra("operation","Edit");
+                startActivity(intent);
+            }
+        }
+        for (int i = 0; i < mCount; i++) {
+            if (v.getId() == mDeleteButtons[i].getId()) {
+                ContentResolver cr = mActivity.getContentResolver();
+                Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, mItems[i].getEventId());
+                cr.delete(deleteEvent, null, null);
+                mItemReference.child(mItemIds[i]).removeValue();
+                mItemLayout.removeAllViews();
+            }
         }
     }
     @Override

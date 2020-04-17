@@ -46,8 +46,15 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     private Query mCategoryQuery;
     private LinearLayout mCategoryLayout;
     private Activity mActivity;
+    private final int MAXSIZE = 200;
+    private Button[] mEditButtons = new Button[MAXSIZE];
+    private Button[] mDeleteButtons = new Button[MAXSIZE];
+    private Category[] mCategorys = new Category[MAXSIZE];
+    private String[] mItemIds = new String[MAXSIZE];
+    private String[] mCategoryIds = new String[MAXSIZE];
+    private LinearLayout[] mCategoryContent = new LinearLayout[MAXSIZE];
+    private int mCount = 0;
     private String TAG = "Category List Fragment";
-    private ArrayList<Button> mEditButtons = new ArrayList<Button>();
     private ArrayList<View.OnClickListener> mEditListeners = new ArrayList<View.OnClickListener>();
     private View view;
     private Runnable r;
@@ -106,93 +113,55 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                 for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
                     final String categoryId = currentSnapshot.getKey();
                     final Category category = currentSnapshot.getValue(Category.class);
+                    mCategorys[mCount] = category;
+                    mCategoryIds[mCount] = categoryId;
                     // linearLayout for one category content
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            LinearLayout categoryContent = new LinearLayout(view.getContext());
-                            categoryContent.setOrientation(LinearLayout.VERTICAL);
+                            mCategoryContent[mCount] = new LinearLayout(view.getContext());
+                            mCategoryContent[mCount].setOrientation(LinearLayout.VERTICAL);
                             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             layoutParams.setMargins(10, 10, 10, 10);
-                            categoryContent.setLayoutParams(layoutParams);
-                            categoryContent.setDividerPadding(10);
-                            categoryContent.setBackgroundResource(R.drawable.bg_item);
-                            categoryContent.setClickable(true);
-                            categoryContent.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "ITEM_LIST");
-                                    intent.putExtra("categoryId",categoryId);
-                                    startActivity(intent);
-                                }
-                            });
+                            mCategoryContent[mCount].setLayoutParams(layoutParams);
+                            mCategoryContent[mCount].setDividerPadding(10);
+                            mCategoryContent[mCount].setBackgroundResource(R.drawable.bg_item);
+                            mCategoryContent[mCount].setClickable(true);
+                            mCategoryContent[mCount].setOnClickListener(CategoryListFragment.this);
+                            mCategoryContent[mCount].setId(2*MAXSIZE + mCount);
                             // TextView for name
                             TextView name = new TextView(view.getContext());
                             name.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                             name.setText(Objects.requireNonNull(category).getName());
                             name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                            categoryContent.addView(name);
+                            mCategoryContent[mCount].addView(name);
                             // TextView for contents
                             TextView contents = new TextView(view.getContext());
                             contents.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                             contents.setText(String.format("Begin: %s\nFrequency: %s\nTime: %s", category.getBegin(), category.getFrequency(), category.getTime()));
-                            categoryContent.addView(contents);
+                            mCategoryContent[mCount].addView(contents);
                             // linearLayout for buttons
                             LinearLayout buttonsLayout = new LinearLayout(view.getContext());
                             buttonsLayout.setOrientation(LinearLayout.HORIZONTAL);
                             buttonsLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                             // edit button
-                            Button editButton = new Button(view.getContext());
-                            editButton.setText(R.string.edit);
-                            editButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            editButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "CATEGORY_EDIT");
-                                    intent.putExtra("categoryName",category.getName());
-                                    intent.putExtra("categoryFrequency",category.getFrequency());
-                                    intent.putExtra("categoryTime",category.getTime());
-                                    intent.putExtra("categoryBegin",category.getBegin());
-                                    intent.putExtra("categoryId",categoryId);
-                                    intent.putExtra("operation","Edit");
-                                    startActivity(intent);
-                                }
-                            });
-                            buttonsLayout.addView(editButton);
+                            mEditButtons[mCount] = new Button(view.getContext());
+                            mEditButtons[mCount].setText(R.string.edit);
+                            mEditButtons[mCount].setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            mEditButtons[mCount].setOnClickListener(CategoryListFragment.this);
+                            mEditButtons[mCount].setId(mCount);
+                            buttonsLayout.addView(mEditButtons[mCount]);
                             // delete button
-                            Button deleteButton = new Button(view.getContext());
-                            deleteButton.setText(R.string.delete);
-                            deleteButton.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                            deleteButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mCategoryReference.child(Objects.requireNonNull(categoryId)).removeValue();
-                                    DatabaseReference itemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(mAuth.getUid())).child(categoryId);
-                                    itemReference.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
-                                                Item item = currentSnapshot.getValue(Item.class);
-                                                ContentResolver cr = mActivity.getContentResolver();
-                                                Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Objects.requireNonNull(item).getEventId());
-                                                cr.delete(deleteEvent, null, null);
-                                            }
-
-                                        }
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                        }
-                                    });
-                                    itemReference.removeValue();
-                                }
-                            });
-                            buttonsLayout.addView(deleteButton);
-                            categoryContent.addView(buttonsLayout);
-                            mCategoryLayout.addView(categoryContent);
+                            mDeleteButtons[mCount] = new Button(view.getContext());
+                            mDeleteButtons[mCount].setText(R.string.delete);
+                            mDeleteButtons[mCount].setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                            mDeleteButtons[mCount].setOnClickListener(CategoryListFragment.this);
+                            mDeleteButtons[mCount].setId(MAXSIZE + mCount);
+                            buttonsLayout.addView(mDeleteButtons[mCount]);
+                            mCategoryContent[mCount].addView(buttonsLayout);
+                            mCategoryLayout.addView( mCategoryContent[mCount]);
+                            mCount++;
                         }
                     });
                 }
@@ -213,6 +182,50 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
             intent.putExtra("content", "CATEGORY_EDIT");
             intent.putExtra("operation", "Add");
             startActivity(intent);
+        }
+        for (int i = 0; i < mCount; i++) {
+            if (view.getId() == mEditButtons[i].getId()) {
+                Intent intent = new Intent(mActivity, NavActivity.class);
+                intent.putExtra("content", "CATEGORY_EDIT");
+                intent.putExtra("categoryName",mCategorys[i].getName());
+                intent.putExtra("categoryFrequency",mCategorys[i].getFrequency());
+                intent.putExtra("categoryTime",mCategorys[i].getTime());
+                intent.putExtra("categoryBegin",mCategorys[i].getBegin());
+                intent.putExtra("categoryId",mCategoryIds[i]);
+                intent.putExtra("operation","Edit");
+                startActivity(intent);
+            }
+        }
+        for (int i = 0; i < mCount; i++) {
+            if (view.getId() == mDeleteButtons[i].getId()) {
+                mCategoryReference.child(Objects.requireNonNull(mCategoryIds[i])).removeValue();
+                DatabaseReference itemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(mAuth.getUid())).child(mCategoryIds[i]);
+                itemReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
+                            Item item = currentSnapshot.getValue(Item.class);
+                            ContentResolver cr = mActivity.getContentResolver();
+                            Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, Objects.requireNonNull(item).getEventId());
+                            cr.delete(deleteEvent, null, null);
+                        }
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                itemReference.removeValue();
+            }
+        }
+        for (int i = 0; i < mCount; i++) {
+            if (view.getId() == mCategoryContent[i].getId()) {
+                Intent intent = new Intent(mActivity, NavActivity.class);
+                intent.putExtra("content", "ITEM_LIST");
+                intent.putExtra("categoryId",mCategoryIds[i]);
+                startActivity(intent);
+            }
         }
     }
     @Override

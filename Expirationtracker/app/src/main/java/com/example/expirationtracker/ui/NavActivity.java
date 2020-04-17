@@ -27,36 +27,34 @@ import java.util.Objects;
 public class NavActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNavigation;
     private String mParent= null;
-    private BottomNavigationView.OnNavigationItemSelectedListener mNavigationListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nav);
     }
-
+    private BottomNavigationView.OnNavigationItemSelectedListener mNavigationListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    openFragment("HOME");
+                    mParent = "HOME";
+                    return true;
+                case R.id.navigation_category:
+                    openFragment("CATEGORY_LIST");
+                    mParent = "HOME";
+                    return true;
+                case R.id.navigation_setting:
+                    openFragment("SETTING");
+                    mParent = "HOME";
+                    return true;
+            }
+            return false;
+        }
+    };
     @Override
     public void onStart(){
         super.onStart();
-        mNavigationListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        openFragment("HOME");
-                        mParent = "HOME";
-                        return true;
-                    case R.id.navigation_category:
-                        openFragment("CATEGORY_LIST");
-                        mParent = "HOME";
-                        return true;
-                    case R.id.navigation_setting:
-                        openFragment("SETTING");
-                        mParent = "HOME";
-                        return true;
-                }
-                return false;
-            }
-        };
         if (!AppStatus.getInstance(this).isOnline()) {
             Toast.makeText(this, "Network connection issue",
                     Toast.LENGTH_SHORT).show();
@@ -143,7 +141,6 @@ public class NavActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         mBottomNavigation.setOnNavigationItemReselectedListener(null);
-        mNavigationListener = null;
         mBottomNavigation = null;
         Runtime.getRuntime().gc();
     }
