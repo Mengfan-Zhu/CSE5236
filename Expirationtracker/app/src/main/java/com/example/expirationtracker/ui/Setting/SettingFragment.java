@@ -54,12 +54,12 @@ public class SettingFragment extends Fragment implements View.OnClickListener{
         switch (view.getId()) {
             case R.id.name_setting:
                 newIntent = new Intent(getActivity(), NavActivity.class);
-                newIntent.putExtra("content", "nameSetting");
+                newIntent.putExtra("content", "NAME_SETTING");
                 startActivity(newIntent);
                 break;
             case R.id.password_setting:
                 newIntent = new Intent(getActivity(), NavActivity.class);
-                newIntent.putExtra("content", "passwordSetting");
+                newIntent.putExtra("content", "PASSWORD_SETTING");
                 startActivity(newIntent);
                 break;
             case R.id.btn_logout:

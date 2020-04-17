@@ -105,7 +105,7 @@ public class PasswordSettingFragment extends Fragment implements View.OnClickLis
                                                     Toast.makeText(mActivity.getApplicationContext(), "Password update successfully. ",
                                                             Toast.LENGTH_SHORT).show();
                                                     Intent newIntent = new Intent(mActivity, NavActivity.class);
-                                                    newIntent.putExtra("content", "setting");
+                                                    newIntent.putExtra("content", "SETTING");
                                                     startActivity(newIntent);
                                                 } else {
                                                     Toast.makeText(mActivity.getApplicationContext(), "Password update failed.",

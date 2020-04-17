@@ -138,7 +138,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "itemEdit");
+                                    intent.putExtra("content", "ITEM_EDIT");
                                     intent.putExtra("itemName",item.getName());
                                     intent.putExtra("itemExpirationDate",item.getExpirationDate());
                                     intent.putExtra("itemQuantity",Integer.toString(item.getQuantity()));
@@ -185,7 +185,7 @@ public class ItemListFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.btn_add_item:
                 Intent addIntent = new Intent(mActivity, NavActivity.class);
-                addIntent.putExtra("content", "itemEdit");
+                addIntent.putExtra("content", "ITEM_EDIT");
                 addIntent.putExtra("operation", "Add");
                 addIntent.putExtra("categoryId",mCategoryId);
                 startActivity(addIntent);

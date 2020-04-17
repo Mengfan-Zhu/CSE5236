@@ -37,7 +37,7 @@ public class AuthActivity extends AppCompatActivity {
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null) {
             Intent intent = new Intent(this, NavActivity.class);
-            intent.putExtra("content", "home");
+            intent.putExtra("content", "HOME");
             startActivity(intent);
         }else{
             ViewPager viewPager = findViewById(R.id.viewPager);

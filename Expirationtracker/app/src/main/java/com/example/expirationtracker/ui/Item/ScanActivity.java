@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,18 +11,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.expirationtracker.AppStatus;
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.ui.NavActivity;
 import com.yzq.zxinglibrary.android.CaptureActivity;
 import com.yzq.zxinglibrary.bean.ZxingConfig;
 import com.yzq.zxinglibrary.common.Constant;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,7 +43,7 @@ public class ScanActivity extends AppCompatActivity {
             Intent itemIntent = this.getIntent();
             mCategoryId = itemIntent.getStringExtra("categoryId");
             mResult = this.findViewById(R.id.scan_result);
-            mResult.setText("Waiting for searching item name");
+            mResult.setText(R.string.scan_search_waiting);
             Intent intent = new Intent(this, CaptureActivity.class);
             // set scan config
             ZxingConfig config = new ZxingConfig();
@@ -67,7 +65,6 @@ public class ScanActivity extends AppCompatActivity {
             } else {
                 startActivityForResult(intent, REQUEST_CODE_SCAN);
             }
-
         }
     }
     @Override
@@ -76,12 +73,13 @@ public class ScanActivity extends AppCompatActivity {
         if(grantResults[0] == 0) {
             Intent intent = new Intent(this, ScanActivity.class);
             intent.putExtra("categoryId", mCategoryId);
+            intent.putExtra("content", "ITEM_EDIT");
             startActivity(intent);
         }else{
             Intent intent = new Intent(ScanActivity.this, NavActivity.class);
             intent.putExtra("operation", "Add");
             intent.putExtra("categoryId",mCategoryId);
-            intent.putExtra("content", "itemEdit");
+            intent.putExtra("content", "ITEM_EDIT");
             startActivity(intent);
         }
     }
@@ -106,22 +104,21 @@ public class ScanActivity extends AppCompatActivity {
                                     intent.putExtra("operation", "Scan");
                                     intent.putExtra("categoryId",mCategoryId);
                                     intent.putExtra("itemName",msg);
-                                    intent.putExtra("content", "itemEdit");
+                                    intent.putExtra("content", "ITEM_EDIT");
                                     startActivity(intent);
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            mResult.setText("Can't find item, please input the item name");
+                                            mResult.setText(R.string.scan_search_fail);
                                         }
                                     });
                                     Intent intent = new Intent(ScanActivity.this, NavActivity.class);
                                     intent.putExtra("operation", "Add");
                                     intent.putExtra("categoryId",mCategoryId);
-                                    intent.putExtra("content", "itemEdit");
+                                    intent.putExtra("content", "ITEM_EDIT");
                                     startActivity(intent);
                                 }
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -148,14 +145,14 @@ public class ScanActivity extends AppCompatActivity {
             }
             in.close();
             byte[] data = out.toByteArray();
-            String html = new String(data, "UTF-8");
-            return html;
+            return new String(data, StandardCharsets.UTF_8);
         }
         return null;
     }
-        public void onDestroy() {
-        stopThread=true;
+    @Override
+    public void onDestroy() {
         super.onDestroy();
+        stopThread = true;
     }
 }
 

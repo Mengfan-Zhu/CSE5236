@@ -216,7 +216,7 @@ public class HomeFragment extends Fragment {
                             intent.putExtra("eventId",Long.toString(item.getEventId()));
                             intent.putExtra("categoryId",categoryId);
                             intent.putExtra("operation","Edit");
-                            intent.putExtra("content", "itemEditFromHome");
+                            intent.putExtra("content", "ITEM_EDIT_FROM_HOME");
                             startActivity(intent);
                         }
                     });

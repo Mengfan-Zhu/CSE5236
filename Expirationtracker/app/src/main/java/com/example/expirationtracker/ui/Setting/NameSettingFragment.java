@@ -93,7 +93,7 @@ public class NameSettingFragment extends Fragment implements View.OnClickListene
             }else{
                 FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(mAuth.getUid())).child("name").setValue(inputName);
                 Intent newIntent = new Intent(mActivity, NavActivity.class);
-                newIntent.putExtra("content", "setting");
+                newIntent.putExtra("content", "SETTING");
                 startActivity(newIntent);
             }
         }

@@ -9,18 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
-
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.User;
-
 import com.example.expirationtracker.ui.NavActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
 
 
 /**
@@ -64,8 +61,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
         Activity activity = getActivity();
         if (activity != null){
-            int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-
             mEtUsername = v.findViewById(R.id.et_email);
             mEtPassword = v.findViewById(R.id.et_password);
             mEtConfirm = v.findViewById(R.id.et_repassword);
@@ -84,7 +79,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
     }
 
     private void createAccount() {
-
         FragmentActivity activity = getActivity();
         String username = mEtUsername.getText().toString();
         String password = mEtPassword.getText().toString();
@@ -94,34 +88,34 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 Log.wtf(TAG, "createAccount:" + username);
                 final User newUser = new User(username, username);
                 mAuth.createUserWithEmailAndPassword(username, password)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            FragmentActivity activity = getActivity();
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "createUserWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    Toast.makeText(activity.getApplicationContext(), "Register success",
-                                            Toast.LENGTH_SHORT).show();
-                                    mDatabase = FirebaseDatabase.getInstance().getReference();
-                                    mDatabase.child("users").child(mAuth.getUid()).setValue(newUser);
-                                    Intent intent = new Intent(getActivity(), NavActivity.class);
-                                    intent.putExtra("content", "home");
-                                    startActivity(intent);
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(activity.getApplicationContext(), "Register fail",
-                                            Toast.LENGTH_SHORT).show();
-                                     mEtPassword.setText("");
-                                     mEtConfirm.setText("");
-                                }
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        FragmentActivity activity = getActivity();
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                Toast.makeText(activity.getApplicationContext(), "Register success",
+                                        Toast.LENGTH_SHORT).show();
+                                mDatabase = FirebaseDatabase.getInstance().getReference();
+                                mDatabase.child("users").child(Objects.requireNonNull(mAuth.getUid())).setValue(newUser);
+                                Intent intent = new Intent(getActivity(), NavActivity.class);
+                                intent.putExtra("content", "HOME");
+                                startActivity(intent);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(activity.getApplicationContext(), "Register fail",
+                                        Toast.LENGTH_SHORT).show();
+                                 mEtPassword.setText("");
+                                 mEtConfirm.setText("");
                             }
-                        });
+                        }
+                    });
             } else if ((username.equals("")) || (password.equals("")) || (confirm.equals(""))) {
                 Toast.makeText(activity.getApplicationContext(), "Username or Password cannot be empty", Toast.LENGTH_SHORT).show();
-            } else if (!password.equals(confirm)){
+            } else {
                 Toast.makeText(activity.getApplicationContext(), "Password not match. Please enter again", Toast.LENGTH_SHORT).show();
                 mEtUsername.setText("");
                 mEtPassword.setText("");

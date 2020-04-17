@@ -9,12 +9,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +23,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.expirationtracker.R;
 import com.example.expirationtracker.model.Category;
 import com.example.expirationtracker.model.Item;
@@ -36,13 +33,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Objects;
 
 
-
-public class ItemEditFragment extends Fragment {
+public class ItemEditFragment extends Fragment implements View.OnClickListener{
     private Activity mActivity;
     private FirebaseAuth mAuth;
     private DatabaseReference mItemReference;
@@ -50,8 +46,7 @@ public class ItemEditFragment extends Fragment {
     private DatabaseReference mCategoryReference;
     private View mView;
     private String mCategoryId;
-    private String mItemId;
-    private Button mSaveButton;
+    private Intent mIntent;
     private String mName;
     private String mQuantity;
     private String mDescription;
@@ -81,80 +76,38 @@ public class ItemEditFragment extends Fragment {
         mView = inflater.inflate(R.layout.fragment_item_edit, container, false);
         mAuth = FirebaseAuth.getInstance();
         mActivity = getActivity();
-        final Intent intent = mActivity.getIntent();
-        mCategoryId = intent.getStringExtra("categoryId");
-
-        if (intent.getStringExtra("operation") != null) {
+        mIntent = Objects.requireNonNull(mActivity).getIntent();
+        mCategoryId = mIntent.getStringExtra("categoryId");
+        if (mIntent.getStringExtra("operation") != null) {
             // deal with edit
-            if (intent.getStringExtra("operation").equals("Edit")) {
-                ((EditText) mView.findViewById(R.id.text_item_name)).setText(intent.getStringExtra("itemName"));
-                String date = intent.getStringExtra("itemExpirationDate");
-                ((DatePicker) mView.findViewById(R.id.date_picker)).updateDate(Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(4, 6)) - 1, Integer.parseInt(date.substring(6, 8)));
-                ((TextView) mView.findViewById((R.id.quantity))).setText(intent.getStringExtra("itemQuantity"));
-                ((EditText) mView.findViewById(R.id.description)).setText(intent.getStringExtra("itemDescription"));
-            } else if (intent.getStringExtra("operation").equals("Scan")) {
-                ((EditText) mView.findViewById(R.id.text_item_name)).setText(intent.getStringExtra("itemName"));
+            if (Objects.requireNonNull(mIntent.getStringExtra("operation")).equals("Edit")) {
+                ((EditText) mView.findViewById(R.id.text_item_name)).setText(mIntent.getStringExtra("itemName"));
+                String date = mIntent.getStringExtra("itemExpirationDate");
+                ((DatePicker) mView.findViewById(R.id.date_picker)).updateDate(Integer.parseInt(Objects.requireNonNull(date).substring(0, 4)), Integer.parseInt(date.substring(4, 6)) - 1, Integer.parseInt(date.substring(6, 8)));
+                ((TextView) mView.findViewById((R.id.quantity))).setText(mIntent.getStringExtra("itemQuantity"));
+                ((EditText) mView.findViewById(R.id.description)).setText(mIntent.getStringExtra("itemDescription"));
+            } else if (Objects.requireNonNull(mIntent.getStringExtra("operation")).equals("Scan")) {
+                ((EditText) mView.findViewById(R.id.text_item_name)).setText(mIntent.getStringExtra("itemName"));
             }
         }
         // save
-        mSaveButton = mView.findViewById(R.id.btn_item_save);
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                mName = ((EditText) mView.findViewById(R.id.text_item_name)).getText().toString();
-                if(mName.length() == 0){
-                    Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
-                            Toast.LENGTH_SHORT).show();
-                    ((EditText) mView.findViewById(R.id.text_item_name)).setText("");
-                }else{
-                    int day = ((DatePicker) mView.findViewById(R.id.date_picker)).getDayOfMonth();
-                    int month = ((DatePicker) mView.findViewById(R.id.date_picker)).getMonth() + 1;
-                    int year = ((DatePicker) mView.findViewById(R.id.date_picker)).getYear();
-                    mDate = "" + year;
-                    if (month < 10) {
-                        mDate = mDate + "0" + month;
-                    } else {
-                        mDate = mDate + month;
-                    }
-                    if (day < 10) {
-                        mDate = mDate + "0" + day;
-                    } else {
-                        mDate = mDate + day;
-                    }
-                    mQuantity = ((TextView) mView.findViewById(R.id.quantity)).getText().toString();
-                    mDescription = ((EditText) mView.findViewById(R.id.description)).getText().toString();
-                    mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(mCategoryId);
-                    if ((intent.getStringExtra("operation")).equals("Edit")) {
-                        mItemId = intent.getStringExtra("itemId");
-                        mEventId = Long. parseLong(intent.getStringExtra("eventId"));
-                        mItemReference.child(mItemId).setValue(new Item(mName, mDate, Integer.parseInt(mQuantity), mDescription, mEventId));
-                        addReminder("Edit");
-                    } else {
-                        addReminder("Add");
-                    }
-                    Intent newIntent = new Intent(mActivity, NavActivity.class);
-                    newIntent.putExtra("content", "itemList");
-                    newIntent.putExtra("categoryId", mCategoryId);
-                    startActivity(newIntent);
-                }
-
-            }
-        });
-
+        Button saveButton = mView.findViewById(R.id.btn_item_save);
+        saveButton.setOnClickListener(this);
         return mView;
     }
-    public void addReminder(String operation) {
+    private void addReminder(String operation) {
         // get date
         int year = Integer.parseInt(mDate.substring(0, 4));
         int month = Integer.parseInt(mDate.substring(4, 6)) - 1;
         int day = Integer.parseInt(mDate.substring(6, 8));
-        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid()).child(mCategoryId);
+        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(Objects.requireNonNull(mAuth.getUid())).child(mCategoryId);
         mCategoryListener = new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // Get category
                         mCategory = dataSnapshot.getValue(Category.class);
                         // get time
-                        String[] time = mCategory.getTime().split(":");
+                        String[] time = Objects.requireNonNull(mCategory).getTime().split(":");
                         int hour = Integer.parseInt(time[0]);
                         int minute = Integer.parseInt(time[1]);
                         // set calendar id
@@ -210,7 +163,7 @@ public class ItemEditFragment extends Fragment {
                             timezone = ZoneId.systemDefault().toString();
                         }
                     // add new event and reminder
-                    if (operation == "Add") {
+                    if (operation.equals("Add")) {
                         // set event
                         ContentValues event = new ContentValues();
                         event.put(CalendarContract.Events.TITLE, "Expiration tracker reminder");
@@ -231,13 +184,13 @@ public class ItemEditFragment extends Fragment {
 
                         } else {
                             newEvent = context.insert(CalendarContract.Events.CONTENT_URI, event);
-                            mEventId = Long.parseLong(newEvent.getLastPathSegment());
+                            mEventId = Long.parseLong(Objects.requireNonNull(Objects.requireNonNull(newEvent).getLastPathSegment()));
                             ContentValues reminder = new ContentValues();
                             reminder.put(CalendarContract.Reminders.EVENT_ID, mEventId);
                             reminder.put(CalendarContract.Reminders.MINUTES, 0);
                             reminder.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
                             newReminder = context.insert(CalendarContract.Reminders.CONTENT_URI, reminder);
-                            if(newEvent == null || newReminder == null){
+                            if(newReminder == null){
                                 return;
                             }
                         }
@@ -264,6 +217,52 @@ public class ItemEditFragment extends Fragment {
                 }
             };
         mCategoryReference.addListenerForSingleValueEvent(mCategoryListener);
+    }
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_item_save) {
+            mName = ((EditText) mView.findViewById(R.id.text_item_name)).getText().toString();
+            if (mName.length() == 0) {
+                Toast.makeText(mActivity.getApplicationContext(), "Name cannot be empty",
+                        Toast.LENGTH_SHORT).show();
+                ((EditText) mView.findViewById(R.id.text_item_name)).setText("");
+            } else {
+                DatePicker datePicker = (DatePicker) mView.findViewById(R.id.date_picker);
+                int day = datePicker.getDayOfMonth();
+                int month = datePicker.getMonth() + 1;
+                int year = datePicker.getYear();
+                mDate = "" + year;
+                if (month < 10) {
+                    mDate = mDate + "0" + month;
+                } else {
+                    mDate = mDate + month;
+                }
+                if (day < 10) {
+                    mDate = mDate + "0" + day;
+                } else {
+                    mDate = mDate + day;
+                }
+                mQuantity = ((TextView) mView.findViewById(R.id.quantity)).getText().toString();
+                mDescription = ((EditText) mView.findViewById(R.id.description)).getText().toString();
+                mItemReference = FirebaseDatabase.getInstance().getReference().child("items").child(Objects.requireNonNull(mAuth.getUid())).child(mCategoryId);
+                if ((Objects.requireNonNull(mIntent.getStringExtra("operation"))).equals("Edit")) {
+                    String itemId = mIntent.getStringExtra("itemId");
+                    mEventId = Long.parseLong(Objects.requireNonNull(mIntent.getStringExtra("eventId")));
+                    mItemReference.child(Objects.requireNonNull(itemId)).setValue(new Item(mName, mDate, Integer.parseInt(mQuantity), mDescription, mEventId));
+                    addReminder("Edit");
+                } else {
+                    addReminder("Add");
+                }
+                Intent newIntent = new Intent(mActivity, NavActivity.class);
+                if (Objects.requireNonNull(mIntent.getStringExtra("content")).equals("ITEM_EDIT_FROM_HOME")) {
+                    newIntent.putExtra("content", "HOME");
+                } else {
+                    newIntent.putExtra("content", "ITEM_LIST");
+                }
+                newIntent.putExtra("categoryId", mCategoryId);
+                startActivity(newIntent);
+            }
+        }
     }
     @Override
     public void onStop() {

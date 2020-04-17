@@ -35,19 +35,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 
 public class CategoryListFragment extends Fragment implements View.OnClickListener {
     private FirebaseAuth mAuth;
     private DatabaseReference mCategoryReference;
-    private View mView;
-    private ScrollView mCategoryList;
     private ValueEventListener mCategoryListener;
     private Query mCategoryQuery;
     private LinearLayout mCategoryLayout;
     private Activity mActivity;
-
-
-    String TAG = "Category List Fragment";
+    private String TAG = "Category List Fragment";
 
     public CategoryListFragment() {
         // Required empty public constructor
@@ -68,20 +66,20 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
 
         // Inflate the layout for this fragment
         mActivity = getActivity();
-        mView = inflater.inflate(R.layout.fragment_category_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_category_list, container, false);
         // set up firebase reference
         mAuth = FirebaseAuth.getInstance();
-        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(mAuth.getUid());
+        mCategoryReference = FirebaseDatabase.getInstance().getReference().child("categories").child(Objects.requireNonNull(mAuth.getUid()));
         // set up layouts
-        mCategoryList = (ScrollView) mView.findViewById(R.id.category_layout);
+        ScrollView categoryList = (ScrollView) view.findViewById(R.id.category_layout);
         mCategoryLayout = new LinearLayout(mActivity);
         mCategoryLayout.setPadding(10,10,10,400);
         mCategoryLayout.setOrientation(LinearLayout.VERTICAL);
-        mCategoryList.addView(mCategoryLayout);
+        categoryList.addView(mCategoryLayout);
         // set up buttons
-        Button addButton = mView.findViewById(R.id.btn_add_category);
+        Button addButton = view.findViewById(R.id.btn_add_category);
         addButton.setOnClickListener(this);
-        return mView;
+        return view;
     }
     @Override
     public void onStart(){
@@ -92,7 +90,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
     public void showCategoryList(Query categoryQuery){
         mCategoryListener = new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // clear previous view
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
@@ -121,7 +119,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "itemList");
+                                    intent.putExtra("content", "ITEM_LIST");
                                     intent.putExtra("categoryId",categoryId);
                                     startActivity(intent);
                                 }
@@ -150,7 +148,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(mActivity, NavActivity.class);
-                                    intent.putExtra("content", "categoryEdit");
+                                    intent.putExtra("content", "CATEGORY_EDIT");
                                     intent.putExtra("categoryName",category.getName());
                                     intent.putExtra("categoryFrequency",category.getFrequency());
                                     intent.putExtra("categoryTime",category.getTime());
@@ -170,25 +168,23 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
                                 public void onClick(View v) {
                                     mCategoryReference.child(categoryId).removeValue();
                                     DatabaseReference itemReference = FirebaseDatabase.getInstance().getReference().child("items").child(mAuth.getUid()).child(categoryId);
-                                    if(itemReference != null){
-                                        itemReference.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
-                                                    Item item = currentSnapshot.getValue(Item.class);
-                                                    ContentResolver cr = mActivity.getContentResolver();
-                                                    Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
-                                                    cr.delete(deleteEvent, null, null);
-                                                }
-
+                                    itemReference.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot currentSnapshot : dataSnapshot.getChildren()) {
+                                                Item item = currentSnapshot.getValue(Item.class);
+                                                ContentResolver cr = mActivity.getContentResolver();
+                                                Uri deleteEvent = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, item.getEventId());
+                                                cr.delete(deleteEvent, null, null);
                                             }
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                            }
-                                        });
-                                        itemReference.removeValue();
-                                    }
+                                        }
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                    itemReference.removeValue();
                                 }
                             });
                             buttonsLayout.addView(deleteButton);
@@ -201,7 +197,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
 
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "FAIL TO UPDATE");
             }
 
@@ -214,7 +210,7 @@ public class CategoryListFragment extends Fragment implements View.OnClickListen
         switch (view.getId()) {
             case R.id.btn_add_category:
                 Intent intent = new Intent(mActivity, NavActivity.class);
-                intent.putExtra("content", "categoryEdit");
+                intent.putExtra("content", "CATEGORY_EDIT");
                 intent.putExtra("operation","Add");
                 startActivity(intent);
                 break;
